@@ -30,3 +30,9 @@
 *.exe
 *.out
 *.app
+
+# remove generated files
+/.pioenvs/*
+/cmake-build-debug/*
+/CMakeLists.txt
+/CMakeListsPrivate.txt

@@ -24,4 +24,10 @@
 
 #endif //PROTEUS_PROTEUS_H
 
+// change these to your setup
+static const char* SSID  = "proteus";
+static const char* PWD   = "abcd.1234";
+
+static const char* SERVER_URL = "http://192.168.1.15:80/";
+
 void update();

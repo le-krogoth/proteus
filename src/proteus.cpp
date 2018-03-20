@@ -22,6 +22,8 @@
 #include "proteus.h"
 #include <Arduino.h>
 
+#include <U8g2lib.h>
+
 #include <ESP8266HTTPClient.h>
 #include <ESP8266httpUpdate.h>
 
@@ -35,6 +37,8 @@
 
 ESP8266WiFiMulti WiFiMulti;
 
+U8G2_SSD1306_128X32_UNIVISION_F_SW_I2C u8g2(U8G2_R0, /* clock=*/ 5, /* data=*/ 4, /* reset=*/ 16);
+//U8G2_SSD1306_128X32_UNIVISION_F_SW_I2C u8g2(U8G2_R0, /* clock=*/ 14, /* data=*/ 2, /* reset=*/ 4);
 
 // ------------------------------------------------------------------
 // ------------------------------------------------------------------
@@ -48,7 +52,13 @@ void setup()
     Serial.println("Proteus v2 booting up");
 
     WiFi.mode(WIFI_STA);
-    WiFiMulti.addAP("AP", "PWD");
+    WiFiMulti.addAP(SSID, PWD);
+
+    delay(1000);
+
+    u8g2.begin();
+    u8g2.setFont(u8g2_font_logisoso32_tf);
+    u8g2.setFontMode(0);    // enable transparent mode, which is faster
 }
 
 // ------------------------------------------------------------------
@@ -56,6 +66,12 @@ void setup()
 // not needed
 void loop()
 {
+    u8g2.firstPage();
+    do {
+        u8g2.setFont(u8g2_font_logisoso32_tf);
+        u8g2.drawUTF8(0,31,"Proteus");
+    } while ( u8g2.nextPage() );
+
     Serial.println("Proteus v2 trying to update");
     update();
     delay(5000);
@@ -79,10 +95,10 @@ void update() {
     if((WiFiMulti.run() == WL_CONNECTED)) {
 
         //Serial.println("Update SPIFFS...");
-        //t_httpUpdate_return ret = ESPhttpUpdate.updateSpiffs("http://192.168.1.5/spiffs/file");
+        //t_httpUpdate_return ret = ESPhttpUpdate.updateSpiffs("http://192.168.1.15/spiffs/file");
         //if(ret == HTTP_UPDATE_OK) {
             Serial.println("Update sketch...");
-            t_httpUpdate_return ret = ESPhttpUpdate.update("http://192.168.1.5:8081/fw/v2");
+            t_httpUpdate_return ret = ESPhttpUpdate.update("http://192.168.1.15:8081/fw/v2");
 
             switch(ret) {
                 case HTTP_UPDATE_FAILED:

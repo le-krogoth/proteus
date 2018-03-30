@@ -2,112 +2,263 @@
 
 <html lang="en">
 <head>
-  <meta charset="utf-8">
+    <meta charset="utf-8">
 
-<title>Proteus - the area41 2018 badge</title>
-  <meta name="description" content="Proteus - the area41 2018 badge">
-  <meta name="author" content="Krogoth">
+    <title>Proteus - the area41 2018 badge</title>
+    <meta name="description" content="Proteus - the area41 2018 badge">
+    <meta name="author" content="Krogoth">
 
-<!-- Metas -->
-<meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- Metas -->
+    <meta name="viewport" content="width=device-width, initial-scale=1">
 
-<!-- Styles -->
-<link rel="stylesheet" type="text/css" href="siimple.css">
-<link rel="stylesheet" type="text/css" href="siimple-colors.css">
+    <!-- Styles -->
+    <link rel="stylesheet" type="text/css" href="/siimple.css">
+    <link rel="stylesheet" type="text/css" href="/siimple-colors.css">
 
-<script type="text/javascript" src="zepto.min.js"></script>
+    <script type="text/javascript" src="/zepto.min.js"></script>
 
 </head>
 <body>
 
+<script type="text/javascript">
+
+    function showConfigure() {
+        $('#dConfigure').show();
+        $('#dInfo').hide();
+        $('#dDetail').hide();
+
+        $('.siimple-tabs-tab').removeClass("siimple-tabs-tab--selected");
+        $('#tConfigure').addClass("siimple-tabs-tab--selected");
+    }
+
+    function showInfo() {
+
+        $('#dConfigure').hide();
+        $('#dInfo').show();
+        $('#dDetail').hide();
+
+        $('.siimple-tabs-tab').removeClass("siimple-tabs-tab--selected");
+        $('#tabInfo').addClass("siimple-tabs-tab--selected");
+
+        getHWInfo();
+    }
+
+    function showDetail() {
+
+        $('#dConfigure').hide();
+        $('#dInfo').hide();
+        $('#dDetail').show();
+
+        $('.siimple-tabs-tab').removeClass("siimple-tabs-tab--selected");
+        $('#tDetail').addClass("siimple-tabs-tab--selected");
+    }
+
+    function hideDWelcome() {
+
+        $('#dWelcome').fadeOut('slow');
+    }
+
+    function onReady(){
+
+        getConfig();
+        window.setTimeout(hideDWelcome, 5000);
+    }
+
+    function onAjaxStart(){
+
+        $('#dLoader').fadeIn('fast');
+    }
+
+    function onAjaxStop(){
+
+        $('#dLoader').fadeOut('fast');
+    }
+
+    function onAjaxSuccess(){
+
+        $('#dSaved').fadeIn('fast');
+    }
+
+    function getConfig(){
+
+        $.ajax({
+            url: '/api/config',
+            type: 'GET',
+            timeout: 2500,
+            error: function(xhr, errorType) { console.error(errorType) },
+            success: function(data, status, xhr) { console.error(status) }
+        })
+    }
+
+    function getHWInfo(){
+
+        $('#dInfoSpinner').show();
+        $('#tblInfo').hide();
+        $('#tbInfo').children().remove();
+
+        $.ajax({
+            url: '/api/hwinfo',
+            type: 'GET',
+            timeout: 2500,
+            error: function(xhr, errorType) { console.error(errorType) },
+            success: function(data, status, xhr) {
+
+                var rows = '';
+
+                $.each(data.hwinfo, function(index, item) {
+
+                    rows +='<div class="siimple-table-row">'
+                    rows +='    <div class="siimple-table-cell">' + index + '</div>'
+                    rows +='    <div class="siimple-table-cell">' + item + '</div>'
+                    rows +='</div>'
+                });
+
+                $('#tbInfo').append(rows);
+                $('#dInfoSpinner').hide();
+                $('#tblInfo').show();
+            }
+        })
+    }
+
+    function submitChanges(){
+
+        $('#bChanges').addClass('siimple-btn--disabled');
+
+        var data = "";
+
+        $.ajax({
+            url: '/api/config',
+            data: data,
+            type: 'POST',
+            timeout: 2500,
+            error: function(xhr, errorType) { console.error(errorType) },
+            success: function(data, status, xhr) { console.error(status) },
+            complete: function(xhr, status) { $('#bChanges').removeClass('siimple-btn--disabled'); }
+        })
+    }
+
+    $(document)
+            .on('ready', onReady)
+            .on('ajaxStart', onAjaxStart())
+            .on('ajaxStop', onAjaxStop())
+            .on('ajaxSuccess', onAjaxSuccess())
+
+</script>
+
 <!-- Main layout -->
 <div class="siimple-layout">
-  <!-- Navbar -->
-  <div class="siimple-navbar siimple-navbar--blue siimple-navbar--large">
-    <!-- Left menu -->
-    <div class="siimple-layout--left">
-      <a class="siimple-navbar-title">Area41 2018</a>
-    </div>
-    <!-- Right menu -->
-    <div class="siimple-layout--right">
-      <a class="siimple-navbar-link" id="atest"></a>
-      <a class="siimple-navbar-link">-</a>
-    </div>
-  </div>
-
-  <script>$('#atest').html('hello-there')</script>
-  
-  <!-- Content -->
-  <div class="siimple-content siimple-content--fluid">
-    <!-- Example box -->
-    <div class="siimple-box" align="center">
-      <div class="siimple-box-title">Welcome...</div>
-      <div class="siimple-box-subtitle">...to your badge.</div>
+    <!-- Navbar -->
+    <div class="siimple-navbar siimple-navbar--blue siimple-navbar--large">
+        <!-- Left menu -->
+        <div class="siimple-layout--left">
+            <a class="siimple-navbar-title">Area41 2018</a>
+        </div>
     </div>
 
-    <div class="siimple-grid-row">
-    <div class="siimple-grid-col">
-        <!-- Test tabs -->
-        <div class="siimple-tabs siimple-tabs--boxed">
-          <div class="siimple-tabs-tab"><a onclick="$('#htest').hide()">Configure</a></div>
-          <div class="siimple-tabs-tab siimple-tabs-tab--selected"><a onclick="$('#htest').show()">Info</a></div>
-          <div class="siimple-tabs-tab">Debug</div>
+    <!-- Content -->
+    <div class="siimple-content siimple-content--fluid">
+        <!-- Example box -->
+        <div class="siimple-tip siimple-tip--blue siimple-tip--heart" id="dWelcome">
+            Welcome to your badge. Have a look at the details page to learn more about it.
         </div>
 
-  <div id="htest">
-        <h2 class="siimple-h2">Configure</h2>
-        <p class="siimple-p">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et
-          dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex
-          ea commodo consequat. </p>
-        <p class="siimple-p">Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu
-          fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia
-          deserunt mollit anim id est laborum.</p>
-        <p class="siimple-p">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et
-          dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex
-          ea commodo consequat. </p>
-        <p class="siimple-p">Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu
-          fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia
-          deserunt mollit anim id est laborum.</p>
-  </div>
-  <div >
+        <div class="siimple-alert siimple-alert--green" style="display:none" id="dLoader">
+            Loading data
+        </div>
 
-        <h2 class="siimple-h2">Info</h2>
-        <p class="siimple-p">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et
-          dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex
-          ea commodo consequat. </p>
-        <p class="siimple-p">Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu
-          fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia
-          deserunt mollit anim id est laborum.</p>
-        <p class="siimple-p">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et
-          dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex
-          ea commodo consequat. </p>
-        <p class="siimple-p">Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu
-          fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia
-          deserunt mollit anim id est laborum.</p>
-  </div>
+        <div class="siimple-alert siimple-alert--green" style="display:none" id="dSaved">
+            Saving changes succeeded
+        </div>
 
-  <div class="siimple-content">
-        <h2 class="siimple-h2">Debug</h2>
-        <p class="siimple-p">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et
-          dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex
-          ea commodo consequat. </p>
-        <p class="siimple-p">Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu
-          fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia
-          deserunt mollit anim id est laborum.</p>
-        <p class="siimple-p">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et
-          dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex
-          ea commodo consequat. </p>
-        <p class="siimple-p">Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu
-          fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia
-          deserunt mollit anim id est laborum.</p>
-</div>
+        <div class="siimple-grid-row">
+            <div class="siimple-grid-col siimple-grid-col--12">
+                <!-- Test tabs -->
+                <div class="siimple-tabs siimple-tabs--boxed">
+                    <div class="siimple-tabs-tab siimple-tabs-tab--selected" id="tConfigure"><a onclick="showConfigure()">Configure</a></div>
+                    <div class="siimple-tabs-tab" id="tabInfo"><a onclick="showInfo()">Info</a></div>
+                    <div class="siimple-tabs-tab" id="tDetail"><a onclick="showDetail()">Detail</a></div>
+                </div>
+
+                <div id="dConfigure">
+                    <h3 class="siimple-h3">Configure your badge</h3>
+                    <div class="siimple-form">
+                        <p class="siimple-p">This section lets you configure the settings for the AP Mode (where you can access your AP and change settings).</p>
+                        <div class="siimple-form-field">
+                            <label class="siimple-label">Nickname to show on the display: </label>
+                            <input type="text" class="siimple-input" placeholder="My Leet Nickname">
+                            <div class="siimple-form-field-helper">If this field is empty, your badge will show something else on the display.</div>
+                        </div>
+                        <br>
+                        <p class="siimple-p">This section lets you configure the settings for the AP Mode (where you can access your AP and change settings).</p>
+                        <div class="siimple-form-field">
+                            <label class="siimple-label">SSID of the AP: </label>
+                            <input type="text" class="siimple-input" placeholder="MyLeetAP">
+                            <div class="siimple-form-field-helper">If this field is empty, your badge will generate the SSID itself.</div>
+                        </div>
+                        <div class="siimple-form-field">
+                            <label class="siimple-label">Password for your AP: </label>
+                            <input type="password" class="siimple-input" placeholder="MyStrongPassword">
+                            <div class="siimple-form-field-helper">If this field is empty, your badge will generate a password itself.</div>
+                        </div>
+                        <label class="siimple-label">Boot into this Mode: </label>
+                        <select class="siimple-select">
+                            <option selected>AP Mode</option>
+                            <option>Conference Mode</option>
+                            <option>Game Mode</option>
+                        </select>
+                        <br>
+                        <br>
+                        <div class="siimple-btn siimple-btn--red" onclick="submitChanges()" id="bChanges">Save changes</div>
+                        <br>
+                        <br>
+                    </div>
+                </div>
+                <div style="display:none" id="dInfo">
+                    <h3 class="siimple-h3">Internal Info of your badge</h3>
+                    <div class="siimple-spinner siimple-spinner--blue" id="dInfoSpinner"></div>
+
+                    <div class="siimple-table siimple-table--striped siimple-table--border siimple-table--hover" id="tblInfo" style="display: none">
+                        <div class="siimple-table-header">
+                            <div class="siimple-table-row">
+                                <div class="siimple-table-cell">Element</div>
+                                <div class="siimple-table-cell">Value</div>
+                            </div>
+                        </div>
+                        <div class="siimple-table-body" id="tbInfo">
+                        </div>
+                    </div>
+                </div>
+                <div style="display:none" id="dDetail">
+                    <h3 class="siimple-h3">Introduction</h3>
+                    <p class="siimple-p">The core of your badge is a ESP8266 produced by Shanghai-based Chinese manufacturer, Espressif Systems. There are many slightly different versions of the ESP8266. The one you are holding is sold as the Heltec WiFi Kit 8, combining the ESP8266 with an OLED display.</p>
+                    <p class="siimple-p">While this is no Arduino clone per-se, you can use the same tools to code the microcontroller.</p>
+                    <p class="siimple-p">If you are interested to learn more, we will release all source code and some of the configurations right after the conference.</p>
+                    <h3 class="siimple-h3">Functionality of Badge</h3>
+                    <p class="siimple-p">Your badge has N modes of operation. The mode your badge is currently in is what we call "AP Mode". Your badge runs it's own AP and announces the details on the display, waiting for you to connect and access the webserver.</p>
+                    <p class="siimple-p">But there is also a "Conference Mode" running features you might want to use at the conference (showing your Nickname, showing the current and upcoming talks) and there is also a "Game mode" where you can play games.</p>
+                    <p class="siimple-p">Did we mention the "Easter Egg Mode"?</p>
+                    <p class="siimple-p"></p>
+                    <p class="siimple-p"></p>
+                    <p class="siimple-p"></p>
+                    <p class="siimple-p"></p>
+                    <p class="siimple-p"></p>
+                    <p class="siimple-p"></p>
+                    <p class="siimple-p"></p>
+                </div>
+            </div>
+        </div>
+
+        <div class="siimple-grid">
+            <div class="siimple-grid-row">
+                <div class="siimple-grid-col siimple-grid-col--12">&nbsp;<br>&nbsp;<br></div>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <div class="siimple-footer siimple-footer--blue siimple-footer--small" align="center">
+            Made with &hearts; by the Area41 2018 Committee
+        </div>
     </div>
-    </div>
-
-  <!-- Footer -->
-  <div class="siimple-footer siimple-footer--grey siimple-footer--large" align="center">
-    Made with &hearts; by the Area41 Committee
-  </div>
 </div>
 
 </body>

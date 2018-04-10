@@ -26,6 +26,7 @@
 #include <limits.h>
 #include <U8g2lib.h>
 #include <Arduino.h>
+#include "ModeManager.h"
 
 #define INVERT 2 //< lit/unlit pixel
 #define WHITE 1 //< lit pixel
@@ -77,31 +78,10 @@ static const unsigned char area41logo[] = {
         0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
         0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00 };
 
-const byte spriteUnicorn_0[]  = {
-        0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x80, 0x40, 0x20, 0x00, 0x00, 0x00, 0x00, 0x00, 0x10, 0x18, 0x8, 0x7c, 0x1c, 0x1c, 0x1e, 0x7f, 0x2, 0x3, 0x3, 0x00, 0x00, 0x00,
-};
-const byte spriteUnicorn_1[] = {
-        0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x80, 0x40, 0x00, 0x00, 0x00, 0x20, 0x30, 0x10, 0x38, 0x78, 0x38, 0x38, 0x38, 0x7c, 0x3e, 0x5, 0x6, 0x6, 0x00, 0x00,
-};
-const byte spriteUnicorn_2[]  = {
-        0x00, 0x00, 0x00, 0x00, 0x00, 0x80, 0x80, 0x80, 0xc0, 0xe0, 0x50, 0x68, 0x64, 0x00, 0x00, 0x00, 0x00, 0x00, 0x2, 0x3, 0x1, 0xf, 0x3, 0x3, 0x3, 0xf, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
-};
-const byte spriteUnicornMask_0[]  = {
-        0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x80, 0x40, 0xa0, 0xd0, 0x20, 0x00, 0x00, 0x00, 0x10, 0x28, 0x24, 0x74, 0x82, 0x62, 0x22, 0x61, 0x80, 0x7d, 0x4, 0x4, 0x3, 0x00, 0x00,
-};
-const byte spriteUnicornMask_1[]  = {
-        0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x80, 0x40, 0xa0, 0x40, 0x00, 0x20, 0x50, 0x48, 0x28, 0x44, 0x84, 0x44, 0x44, 0x44, 0x82, 0x41, 0x3a, 0x9, 0x9, 0x6, 0x00,
-};
-const byte spriteUnicornMask_2[]  = {
-        0x00, 0x00, 0x00, 0x80, 0x80, 0x40, 0x40, 0x40, 0x20, 0x10, 0xa8, 0x94, 0x9a, 0x64, 0x00, 0x00, 0x00, 0x2, 0x5, 0x4, 0xe, 0x10, 0xc, 0x4, 0xc, 0x10, 0xf, 0x00, 0x00, 0x00, 0x00, 0x00,
-};
-//const byte *animationFramesUnicorn[] = { spriteUnicorn_0, spriteUnicorn_1, spriteUnicorn_2 };
-//const byte *animationFramesUnicornMask[] = { spriteUnicornMask_0, spriteUnicornMask_1, spriteUnicornMask_2 };
-
 class DisplayManager
 {
 public:
-    DisplayManager(U8G2_SSD1306_128X32_UNIVISION_F_SW_I2C* const lib, HardwareSerial* const hs);
+    DisplayManager(ModeManager* const m, U8G2_SSD1306_128X32_UNIVISION_F_SW_I2C* const lib, HardwareSerial* const hws);
 
     /// Initializes the hardware
     void begin();
@@ -109,56 +89,11 @@ public:
     /// Scrolls in the Arduboy logo
     void showBootLogo();
 
-    /// Clears display.
-    void clear();
-
-    /// Sets a single pixel on the screen buffer to white or black.
-    void drawPixel(int x, int y, uint8_t color);
-
-    //uint8_t getPixel(uint8_t x, uint8_t y);
-
-    /// Draw a circle of a defined radius.
-    void drawCircle(int16_t x0, int16_t y0, uint8_t r, uint8_t color);
-
-    /// Draws a filled-in circle.
-    void fillCircle(int16_t x0, int16_t y0, uint8_t r, uint8_t color);
-
-    /// Draws a line between two points.
-    void drawLine(int16_t x0, int16_t y0, int16_t x1, int16_t y1, uint8_t color);
-
-    /// Draws a rectangle of a width and height.
-    void drawRect(int16_t x, int16_t y, uint8_t w, uint8_t h, uint8_t color);
-
-    /// Draws a filled-in rectangle.
-    void fillRect(int16_t x, int16_t y, uint8_t w, uint8_t h, uint8_t color);
-
-    /// Fills the screen with white or black.
-    void fillScreen(uint8_t color);
-
-    /// Draws a rectangle with rounded edges.
-    void drawRoundRect(int16_t x, int16_t y, uint8_t w, uint8_t h, uint8_t r, uint8_t color);
-
-    /// Draws a filled-in rectangle with rounded edges.
-    void fillRoundRect(int16_t x, int16_t y, uint8_t w, uint8_t h, uint8_t r, uint8_t color);
-
-    /// Draws the outline of a triangle.
-    void drawTriangle(int16_t x0, int16_t y0, int16_t x1, int16_t y1, int16_t x2, int16_t y2, uint8_t color);
-
-    /// Draws a filled-in triangle.
-    void fillTriangle (int16_t x0, int16_t y0, int16_t x1, int16_t y1, int16_t x2, int16_t y2, uint8_t color);
-
-    /// Draws a bitmap from program memory to a specific X/Y
-    void drawBitmap(int16_t x, int16_t y, const uint8_t *bitmap, uint8_t w, uint8_t h, uint8_t color);
-
-    /// Draws an ASCII character at a point.
-    void drawChar(int16_t x, int16_t y, unsigned char c, uint8_t color, uint8_t bg, uint8_t size);
-
-
     void setFrameRate(uint8_t rate);
     bool nextFrame();
     bool everyXFrames(uint8_t frames);
 
-    void handleScreen();
+    void handleFrame();
 
     uint8_t frameRate;
     uint16_t frameCount;
@@ -168,21 +103,13 @@ public:
     bool post_render;
     uint8_t lastFrameDurationMs;
 
-    // sinus
-    int i = 0;
-    float d = 0.0;
-    int c = 129;
+protected:
 
+private:
+    ModeManager* mm;
 
     U8G2_SSD1306_128X32_UNIVISION_F_SW_I2C* u8g2;
-    HardwareSerial* s;
-
-protected:
-
-
-// Adafruit stuff
-protected:
-
+    HardwareSerial* hs;
 };
 
 #endif

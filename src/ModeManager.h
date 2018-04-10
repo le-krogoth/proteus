@@ -18,29 +18,48 @@
  ** along with this program. If not, see <http://www.gnu.org/licenses/>.
  **
  ** -----------------------------------------------------------------------------*/
-
-#ifndef PROTEUS_PROTEUS_H
-#define PROTEUS_PROTEUS_H
-
-#endif //PROTEUS_PROTEUS_H
+#ifndef modemanager_h
+#define modemanager_h
 
 #include <Arduino.h>
-#include <ArduinoJson.h>
+#include "EventHandler.h"
+#include "modes/BaseMode.h"
+#include "modes/ModeTimeTable.h"
+#include "modes/ModeUnicorn.h"
+#include "modes/ModeSelectMode.h"
 
-// change these to your setup
-static const char* SSID  = "proteus";
-static const char* PWD   = "abcd.1234";
+#define MODE_SELECTMODE 0
+#define MODE_LOGO 1
+#define MODE_NICK 2
+#define MODE_TIMETABLE 3
+#define MODE_GAME_A 4
+#define MODE_WIFISERVER 5
 
-static const char* SERVER_URL = "http://192.168.1.15:80/";
+#define MODE_COUNT 5
+#define MODE_DEFAULT 0
 
-void update();
-void handleNotFound();
-void reply404();
-void getHWInfo();
-void getRoot();
-void getConfig();
-void setConfig();
-bool loadFromSPIFFS(String path);
-String getMAC();
+class ModeManager
+{
+public:
+    ModeManager(EventHandler* const e, HardwareSerial* const hws);
+
+    void checkEvents();
+
+    uint8_t getCurrentMode();
+    BaseMode* getCurrentModeObject();
+    //uint8_t nextMode();
+    void setMode(uint8_t mode);
 
 
+protected:
+
+
+private:
+    uint8_t currentMode;
+    BaseMode* currentModeObject = NULL;
+
+    HardwareSerial* hs = NULL;
+    EventHandler* eh = NULL;
+};
+
+#endif

@@ -19,28 +19,7 @@
  **
  ** -----------------------------------------------------------------------------*/
 
-#ifndef PROTEUS_PROTEUS_H
-#define PROTEUS_PROTEUS_H
+// This file is based on source code written and (c) 2018 by Stefan Kremser under
+// the MIT Licence
 
-#endif //PROTEUS_PROTEUS_H
-
-#include <Arduino.h>
-#include <ArduinoJson.h>
-
-// change these to your setup
-static const char* SSID  = "proteus";
-static const char* PWD   = "abcd.1234";
-
-static const char* SERVER_URL = "http://192.168.1.15:80/";
-
-void update();
-void handleNotFound();
-void reply404();
-void getHWInfo();
-void getRoot();
-void getConfig();
-void setConfig();
-bool loadFromSPIFFS(String path);
-String getMAC();
-
-
+#include "SimpleList.h"

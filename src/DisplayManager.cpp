@@ -21,8 +21,13 @@
 #include "DisplayManager.h"
 
 
-DisplayManager::DisplayManager(U8G2_SSD1306_128X32_UNIVISION_F_SW_I2C* const lib, HardwareSerial* const hs)
+DisplayManager::DisplayManager(ModeManager* const m, U8G2_SSD1306_128X32_UNIVISION_F_SW_I2C* const u8, HardwareSerial* const hws)
 {
+    // store pointer to lib for later use
+    mm = m;
+    u8g2 = u8;
+    hs = hws;
+
     // frame management
     setFrameRate(60);
     frameCount = 0;
@@ -31,10 +36,6 @@ DisplayManager::DisplayManager(U8G2_SSD1306_128X32_UNIVISION_F_SW_I2C* const lib
     // init not necessary, will be reset after first use
     // lastFrameStart
     // lastFrameDurationMs
-
-    // store pointer to lib for later use
-    u8g2 = lib;
-    s = hs;
 }
 
 void DisplayManager::begin()
@@ -129,55 +130,17 @@ bool DisplayManager::nextFrame()
     return post_render;
 }
 
-void DisplayManager::handleScreen()
+void DisplayManager::handleFrame()
 {
-    //s->print("Checking next frame ");
+    //hs->println("handle Frame");
 
-    if(this->nextFrame()) {
+    BaseMode* m = mm->getCurrentModeObject();
 
-        //s->println("yes");
+    //hs->println("handle events");
+    m->handleEvents();
 
-        u8g2->firstPage();
-        do {
-
-        float p = 2 * sin(d);
-        float q = 2 * sin(-d);
-
-        for (byte k = 1; k < 16; k++) {
-            // some calculations are used multiple times
-            // so better caclutate them once and reuse
-            // the results.
-            float r = sin(d + (k * 0.4));
-            float t = sin(d + 3 + (k * 0.4));
-
-            // First lets draw the top 12 balls
-            fillCircle(k * 8 + p, 12 + (r * 10), 2, 1);
-            // and now the bottom 12 balls
-            fillCircle(k * 8 + q, 12 + (t * 10), 2, 1);
-
-            // now we draw a line from the top ball to the bottom ball
-            drawLine(k * 8 + p, 10 + (r * 10), k * 8 + q, (10 + t * 10), 1);
-
-            // and finally we need a line from ball to ball on the top part
-            if(k < 15) {
-                drawLine((k * 8 + p), 12 + (r * 10), 6 + (k * 8 + p), (12 + sin(d + ((k + 1) * 0.4)) * 10), 1);
-            }
-
-            // and the bottom part
-            if(k < 15) {
-                drawLine((k * 8 + q), 12 + (t * 10), 6 + (k * 8 + q), (12 + sin(d + 3 + ((k + 1) * 0.4)) * 10), 1);
-            }
-        }
-
-        } while ( u8g2->nextPage() );
-
-    }
-    else {
-        s->println("no");
-    }
-
-    // float d goes 1 step further on the sine evolution
-    d = d + 0.10;
+    //hs->println("paint frame");
+    m->paintFrame(u8g2);
 }
 
 /*
@@ -204,86 +167,6 @@ void DisplayManager::handleScreen()
   arduboy.drawBitmap(c + 120, 32 - sin(d + (12 * 0.4)) * 5, LetterY, 8, 8, 1);
 // end wobbling text
  * */
-
-
-// Graphics
-
-void DisplayManager::clear()
-{
-    fillScreen(BLACK);
-}
-
-void DisplayManager::drawPixel(int x, int y, uint8_t color)
-{
-    u8g2->drawPixel(x, y);
-}
-
-/*uint8_t DisplayManager::getPixel(uint8_t x, uint8_t y)
-{
-    uint8_t row = y / 8;
-    uint8_t bit_position = y % 8;
-    return (sBuffer[(row*WIDTH) + x] & _BV(bit_position)) >> bit_position;
-}*/
-
-void DisplayManager::drawCircle(int16_t x0, int16_t y0, uint8_t r, uint8_t color)
-{
-    u8g2->drawCircle(x0, y0, r);
-}
-
-void DisplayManager::fillCircle(int16_t x0, int16_t y0, uint8_t r, uint8_t color)
-{
-    u8g2->drawDisc(x0, y0, r);
-}
-
-void DisplayManager::drawLine(int16_t x0, int16_t y0, int16_t x1, int16_t y1, uint8_t color)
-{
-    u8g2->drawLine(x0, y0, x1, y1);
-}
-
-void DisplayManager::drawRect(int16_t x, int16_t y, uint8_t w, uint8_t h, uint8_t color)
-{
-    u8g2->drawFrame(x, y, w, h);
-}
-
-void DisplayManager::fillRect(int16_t x, int16_t y, uint8_t w, uint8_t h, uint8_t color)
-{
-    u8g2->drawBox(x, y, w, h);
-}
-
-void DisplayManager::fillScreen(uint8_t color)
-{
-
-}
-
-void DisplayManager::drawRoundRect(int16_t x, int16_t y, uint8_t w, uint8_t h, uint8_t r, uint8_t color)
-{
-    u8g2->drawRFrame(x, y, w, h, r);
-}
-
-void DisplayManager::fillRoundRect(int16_t x, int16_t y, uint8_t w, uint8_t h, uint8_t r, uint8_t color)
-{
-    u8g2->drawRBox(x, y, w, h, r);
-}
-
-void DisplayManager::drawTriangle(int16_t x0, int16_t y0, int16_t x1, int16_t y1, int16_t x2, int16_t y2, uint8_t color)
-{
-
-}
-
-void DisplayManager::fillTriangle(int16_t x0, int16_t y0, int16_t x1, int16_t y1, int16_t x2, int16_t y2, uint8_t color)
-{
-
-}
-
-void DisplayManager::drawBitmap(int16_t x, int16_t y, const uint8_t *bitmap, uint8_t w, uint8_t h, uint8_t color)
-{
-
-}
-
-void DisplayManager::drawChar(int16_t x, int16_t y, unsigned char c, uint8_t color, uint8_t bg, uint8_t size)
-{
-
-}
 
 /*
 void DisplayManager::setTextSize(uint8_t s)

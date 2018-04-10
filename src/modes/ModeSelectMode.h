@@ -18,29 +18,28 @@
  ** along with this program. If not, see <http://www.gnu.org/licenses/>.
  **
  ** -----------------------------------------------------------------------------*/
+#ifndef mode_selectmode_h
+#define mode_selectmode_h
 
-#ifndef PROTEUS_PROTEUS_H
-#define PROTEUS_PROTEUS_H
+#include <U8g2lib.h>
+#include "../EventHandler.h"
+#include "BaseMode.h"
 
-#endif //PROTEUS_PROTEUS_H
+class ModeSelectMode : public BaseMode
+{
+public:
+    ModeSelectMode(EventHandler* const e, HardwareSerial* const hws);
 
-#include <Arduino.h>
-#include <ArduinoJson.h>
+    void handleEvents();
+    //void paintFrame(U8G2_SSD1306_128X32_UNIVISION_F_SW_I2C* const u8g2);
+    void paintFrameInternal();
 
-// change these to your setup
-static const char* SSID  = "proteus";
-static const char* PWD   = "abcd.1234";
+    uint8_t getSelectedMode();
 
-static const char* SERVER_URL = "http://192.168.1.15:80/";
+protected:
 
-void update();
-void handleNotFound();
-void reply404();
-void getHWInfo();
-void getRoot();
-void getConfig();
-void setConfig();
-bool loadFromSPIFFS(String path);
-String getMAC();
+private:
+    uint8_t selectedMode = 0;
+};
 
-
+#endif

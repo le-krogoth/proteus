@@ -21,13 +21,10 @@
 
 #include "proteus.h"
 
-
-#include <FS.h>
-#include <ArduinoJson.h>
-
-
 #include <U8g2lib.h>
 #include "DisplayManager.h"
+#include "EventHandler.h"
+#include "ModeManager.h"
 
 #include <ESP8266HTTPClient.h>
 #include <ESP8266httpUpdate.h>
@@ -45,14 +42,13 @@ ESP8266WiFiMulti WiFiMulti;
 U8G2_SSD1306_128X32_UNIVISION_F_SW_I2C u8g2(U8G2_R0, /* clock=*/ 5, /* data=*/ 4, /* reset=*/ 16);
 //U8G2_SSD1306_128X32_UNIVISION_F_SW_I2C u8g2(U8G2_R0, /* clock=*/ 14, /* data=*/ 2, /* reset=*/ 4);
 
-ESP8266WebServer server(1234);
+ESP8266WebServer server(80);
 
 #define COUNT_OF(x) ((sizeof(x)/sizeof(0[x])) / ((size_t)(!(sizeof(x) % sizeof(0[x])))))
 
-char m[16][8]; // 16 chars across, 8 chars high
-int ySpeeds[16];
-
 DisplayManager* dm = NULL;
+EventHandler* eh = NULL;
+ModeManager* mm = NULL;
 
 // ------------------------------------------------------------------
 // ------------------------------------------------------------------
@@ -65,46 +61,27 @@ void setup()
 
     Serial.println("Proteus v2 booting up");
 
+    eh = new EventHandler(&Serial);
+    mm = new ModeManager(eh, &Serial);
+
+    dm = new DisplayManager(mm, &u8g2, &Serial);
+    dm->begin();
+    //dm->showBootLogo();
+
+    pinMode(13, INPUT_PULLUP);
+    pinMode(12, INPUT_PULLUP);
+    //pinMode(1, INPUT_PULLUP);
+
     SPIFFS.begin();
 
-    // open file for reading
-    File f = SPIFFS.open("/ttbl.json", "r");
-    if (!f) {
-        Serial.println("file open failed");
-    }
+    WiFi.mode(WIFI_AP);
+    //WiFi.mode(WIFI_AP_STA);
+    //WiFiMulti.addAP(SSID, PWD);
 
-    Serial.println("====== Reading from SPIFFS file =======");
+    const char* SAP_SSID  = ("area41_" + getMAC()).c_str();
+    const char* SAP_PWD   = "abcd1234";
 
-    // Allocate the memory pool on the stack.
-    // Don't forget to change the capacity to match your JSON document.
-    // Use arduinojson.org/assistant to compute the capacity.
-    StaticJsonBuffer<512> jsonBuffer;
-
-    // Parse the root object
-    JsonObject &root = jsonBuffer.parseObject(f);
-
-    if (!root.success())
-    {
-        Serial.println(F("Failed to read file"));
-    }
-    else
-    {
-        const char* name = root["name"];
-        const char* version = root["version"];
-
-        // Print values.
-        Serial.println(name);
-        Serial.println(version);
-    }
-
-    f.close();
-
-    dm = new DisplayManager(&u8g2, &Serial);
-    dm->begin();
-    dm->showBootLogo();
-
-    WiFi.mode(WIFI_STA);
-    WiFiMulti.addAP(SSID, PWD);
+    WiFi.softAP(SAP_SSID, SAP_PWD);
 
     delay(1000);
 
@@ -128,7 +105,7 @@ void setConfig() {
 
     Serial.println(server.arg("plain"));
 
-    DynamicJsonBuffer jsonBuffer(4000);
+    DynamicJsonBuffer jsonBuffer(1000);
     JsonObject& root = jsonBuffer.parseObject(server.arg("plain"));
 
     const char* nickname = root["nickname"];
@@ -256,10 +233,43 @@ bool loadFromSPIFFS(String path) {
 // not needed
 void loop()
 {
-    dm->handleScreen();
+    if(!dm->nextFrame())
+    {
+        return;
+    }
+
+    eh->poll();
+
+    mm->checkEvents();
+
+    dm->handleFrame();
 
     server.handleClient();
 
+    /*
+
+    uint16_t buttons1 = ((~PIN_IN) & (bit(1) | bit(12) | bit(13)));
+
+    Serial.println(PIN_IN);
+    Serial.println(buttons1);
+
+    //uint16_t buttons2 = ((PIN_IN) & (bit(12) | bit(13)));
+
+    //Serial.print("-");
+    //Serial.println(buttons2);
+
+    Serial.print("left: ");
+    Serial.print((buttons1 & bit(13)) == bit(13));
+
+    Serial.print(" right: ");
+    Serial.print((buttons1 & bit(12)) == bit(12));
+
+    Serial.print(" prog: ");
+    Serial.print((buttons1 & bit(1)) == bit(1));
+
+    Serial.print(" both: ");
+    Serial.println((buttons1 & (bit(12) | bit(13))) == (bit(12) | bit(13)));
+    */
     /*
     u8g2.firstPage();
     do {

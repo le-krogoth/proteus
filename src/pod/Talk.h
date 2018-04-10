@@ -18,29 +18,20 @@
  ** along with this program. If not, see <http://www.gnu.org/licenses/>.
  **
  ** -----------------------------------------------------------------------------*/
-
-#ifndef PROTEUS_PROTEUS_H
-#define PROTEUS_PROTEUS_H
-
-#endif //PROTEUS_PROTEUS_H
-
-#include <Arduino.h>
-#include <ArduinoJson.h>
-
-// change these to your setup
-static const char* SSID  = "proteus";
-static const char* PWD   = "abcd.1234";
-
-static const char* SERVER_URL = "http://192.168.1.15:80/";
-
-void update();
-void handleNotFound();
-void reply404();
-void getHWInfo();
-void getRoot();
-void getConfig();
-void setConfig();
-bool loadFromSPIFFS(String path);
-String getMAC();
+#ifndef PROTEUS_TALK_H
+#define PROTEUS_TALK_H
 
 
+class Talk
+{
+public:
+    const char* title;
+    const char* speaker;
+    const char* room;
+    const char* date;
+    const char* start;
+    const char* end;
+};
+
+
+#endif //PROTEUS_TALK_H

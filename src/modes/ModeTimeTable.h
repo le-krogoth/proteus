@@ -18,29 +18,42 @@
  ** along with this program. If not, see <http://www.gnu.org/licenses/>.
  **
  ** -----------------------------------------------------------------------------*/
+#ifndef mode_timetable_h
+#define mode_timetable_h
 
-#ifndef PROTEUS_PROTEUS_H
-#define PROTEUS_PROTEUS_H
-
-#endif //PROTEUS_PROTEUS_H
-
-#include <Arduino.h>
+#include <FS.h>
 #include <ArduinoJson.h>
+#include <LinkedList.h>
 
-// change these to your setup
-static const char* SSID  = "proteus";
-static const char* PWD   = "abcd.1234";
+#include <U8g2lib.h>
+#include "../EventHandler.h"
+#include "BaseMode.h"
+#include "../pod/Talk.h"
+#include "../pod/SimpleList.h"
 
-static const char* SERVER_URL = "http://192.168.1.15:80/";
+class ModeTimeTable : public BaseMode
+{
+public:
+    ModeTimeTable(EventHandler* const e, HardwareSerial* const hws);
 
-void update();
-void handleNotFound();
-void reply404();
-void getHWInfo();
-void getRoot();
-void getConfig();
-void setConfig();
-bool loadFromSPIFFS(String path);
-String getMAC();
+    void handleEvents();
+    //void paintFrame(U8G2_SSD1306_128X32_UNIVISION_F_SW_I2C* const u8g2);
+    void paintFrameInternal();
+    bool loadTimeTable();
 
+protected:
 
+private:
+    uint8_t currentTalk = 0;
+    //LinkedList<Talk*> lTalks = LinkedList<Talk*>();
+    SimpleList<Talk*> sTalks = SimpleList<Talk*>();
+
+    String title = ".";
+    String room = ".";
+    String speaker = ".";
+    String date = ".";
+    String start = ".";
+    String end = ".";
+};
+
+#endif

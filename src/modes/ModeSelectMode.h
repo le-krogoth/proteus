@@ -28,7 +28,7 @@
 class ModeSelectMode : public BaseMode
 {
 public:
-    ModeSelectMode(EventHandler* const e, HardwareSerial* const hws);
+    ModeSelectMode(uint8_t currentMode, EventHandler* const e, HardwareSerial* const hws);
 
     void handleEvents();
     //void paintFrame(U8G2_SSD1306_128X32_UNIVISION_F_SW_I2C* const u8g2);

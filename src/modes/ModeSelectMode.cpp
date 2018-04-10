@@ -20,9 +20,16 @@
  ** -----------------------------------------------------------------------------*/
 #include "ModeSelectMode.h"
 
-ModeSelectMode::ModeSelectMode(EventHandler *const e, HardwareSerial *const hws) : BaseMode (e, hws)
+ModeSelectMode::ModeSelectMode(uint8_t currentMode, EventHandler *const e, HardwareSerial *const hws) : BaseMode (e, hws)
 {
+    // this is a bit of a hack, but the selected mode in here == the modes outside - 1
+    // but we want to make sure that we do not lower the uint below 0...
+    selectedMode = (currentMode > 0) ? currentMode - 1 : currentMode;
 
+    if(selectedMode >= 8)
+    {
+        selectedMode = 0;
+    }
 }
 
 uint8_t ModeSelectMode::getSelectedMode()

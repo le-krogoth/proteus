@@ -26,7 +26,7 @@ ModeTimeTable::ModeTimeTable(EventHandler *const e, HardwareSerial *const hws) :
 
     if(bLoaded)
     {
-        // TODO change me...
+        // TODO change me into a general loading method...
         Talk* talk = sTalks.get(0);
         title = talk->title;
         room = talk->room;
@@ -174,38 +174,4 @@ bool ModeTimeTable::loadTimeTable()
     return true;
 }
 
-/*
-    // open file for reading
-    File f = SPIFFS.open("/ttbl.json", "r");
-    if (!f)
-    {
-        Serial.println("file open failed");
-    }
-    else
-    {
-        Serial.println("====== Reading from SPIFFS file =======");
-
-        // Allocate the memory pool on the stack.
-        DynamicJsonBuffer jsonBuffer(4000);
-        JsonObject& root = jsonBuffer.parseObject(f);
-
-        f.close();
-
-        if (!root.success())
-        {
-            Serial.println(F("Failed to read file"));
-        }
-        else
-        {
-            JsonArray& talks =  root["talks"];
-            for (auto& talk : talks) {
-                const char* title = talk["title"];
-                const char* speaker = talk["speaker"];
-                Serial.print(speaker);
-                Serial.print(": ");
-                Serial.println(String(title));
-            }
-        }
-    }
-    */
 

@@ -25,7 +25,7 @@ ModeManager::ModeManager(EventHandler* const e, HardwareSerial* const hws)
     eh = e;
     hs = hws;
 
-    setMode(MODE_DEFAULT);
+    setMode(MODE_DEFAULT, MODE_DEFAULT);
 }
 
 void ModeManager::checkEvents()
@@ -49,12 +49,13 @@ void ModeManager::checkEvents()
             hs->println(m->getSelectedMode());
 
             currentMode = m->getSelectedMode() + 1;
-            setMode(currentMode);
+            setMode(currentMode, 0);
         }
         else
         {
+            uint8_t oldMode = currentMode;
             currentMode = 0;
-            setMode(currentMode);
+            setMode(currentMode, oldMode);
         }
 
 /*
@@ -133,15 +134,15 @@ BaseMode* ModeManager::getCurrentModeObject()
     return currentModeObject;
 }
 
-void ModeManager::setMode(uint8_t mode)
+void ModeManager::setMode(uint8_t newMode, uint8_t oldMode)
 {
-    if(mode < 0 || mode > MODE_COUNT)
+    if(newMode < 0 || newMode > MODE_COUNT)
     {
         currentMode = MODE_DEFAULT;
     }
     else
     {
-        currentMode = mode;
+        currentMode = newMode;
     }
 
     if(currentModeObject)
@@ -157,7 +158,7 @@ void ModeManager::setMode(uint8_t mode)
     {
         case MODE_SELECTMODE:
             hs->println("SELECTMODE");
-            currentModeObject = new ModeSelectMode(eh, hs);
+            currentModeObject = new ModeSelectMode(oldMode, eh, hs);
             break;
         case MODE_LOGO:
             hs->println("LOGO");

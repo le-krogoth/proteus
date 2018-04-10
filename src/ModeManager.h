@@ -48,7 +48,7 @@ public:
     uint8_t getCurrentMode();
     BaseMode* getCurrentModeObject();
     //uint8_t nextMode();
-    void setMode(uint8_t mode);
+    void setMode(uint8_t newMode, uint8_t oldMode);
 
 
 protected:

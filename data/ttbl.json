@@ -1,9 +1,9 @@
 {
   "talks": [
-      {"title":"Opening Ceremony", "speaker": "Area41 Team", "room": "all", "date":"friday", "start":"09:15", "end":"09:30"},
-      {"title":"Keynote", "speaker": "Costin Raiu (@craiu)", "room": "all", "date":"friday", "start":"09:30", "end":"10:00"},
-      {"title":"Coffee Break", "speaker": "Area41 Team", "room": "all", "date":"friday", "start":"10:00", "end":"10:30"},
-      {"title":"Monitoring macOS for malware and intrusions", "speaker": "Daniel Roethlisberger (@droethlisberger)", "room": "1", "date":"friday", "start":"10:30", "end":"11:20"},
-      {"title":"Chrome & WebRTC -eq Problems", "speaker": "Amit Dori (@_AmitDori_)", "room": "2", "date":"friday", "start":"10:30", "end":"11:20"}
+      {"title":"Opening Ceremony", "speaker": "Area41 Team", "room": "P", "date":"F", "start":"09:15", "end":"09:30"},
+      {"title":"Keynote", "speaker": "Costin Raiu (@craiu)", "room": "P", "date":"F", "start":"09:30", "end":"10:00"},
+      {"title":"Coffee Break", "speaker": "Area41 Team", "room": "P", "date":"F", "start":"10:00", "end":"10:30"},
+      {"title":"Monitoring macOS for malware and intrusions", "speaker": "Daniel Roethlisberger (@droethlisberger)", "room": "1", "date":"F", "start":"10:30", "end":"11:20"},
+      {"title":"Chrome & WebRTC -eq Problems", "speaker": "Amit Dori (@_AmitDori_)", "room": "2", "date":"F", "start":"10:30", "end":"11:20"}
     ]
 }

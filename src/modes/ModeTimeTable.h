@@ -23,7 +23,6 @@
 
 #include <FS.h>
 #include <ArduinoJson.h>
-#include <LinkedList.h>
 
 #include <U8g2lib.h>
 #include "../EventHandler.h"
@@ -46,7 +45,7 @@ protected:
 private:
     uint8_t currentTalk = 0;
     //LinkedList<Talk*> lTalks = LinkedList<Talk*>();
-    SimpleList<Talk*> sTalks = SimpleList<Talk*>();
+    SimpleList<Talk>* sTalks = new SimpleList<Talk>;
 
     String title = ".";
     String room = ".";
@@ -54,6 +53,17 @@ private:
     String date = ".";
     String start = ".";
     String end = ".";
+
+    int titleOffset = 0;
+    int speakerOffset = 0;
+
+    bool titleScrollLeft = true;
+    bool speakerScrollLeft = true;
+
+    u8g2_uint_t titleWidth = 0;
+    u8g2_uint_t speakerWidth = 0;
+
+    void initCurrentTalk();
 };
 
 #endif

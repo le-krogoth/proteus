@@ -26,15 +26,34 @@ ModeTimeTable::ModeTimeTable(EventHandler *const e, HardwareSerial *const hws) :
 
     if(bLoaded)
     {
-        // TODO change me into a general loading method...
-        Talk* talk = sTalks.get(0);
-        title = talk->title;
-        room = talk->room;
-        speaker = talk->speaker;
-        date = talk->date;
-        start = talk->start;
-        end = talk->end;
+        initCurrentTalk();
     }
+}
+
+void ModeTimeTable::initCurrentTalk()
+{
+    Talk talk = sTalks->get(currentTalk);
+
+    hs->print("Init current talk: ");
+    hs->println(currentTalk);
+
+    title = talk.title;
+    room = talk.room;
+    speaker = talk.speaker;
+    date = talk.date;
+    start = talk.start;
+    end = talk.end;
+
+    titleOffset = 0;
+    speakerOffset = 0;
+
+    titleScrollLeft = true;
+    speakerScrollLeft = true;
+
+    titleWidth = 0;
+    speakerWidth = 0;
+
+    hs->println("End of initcurrenttalk");
 }
 
 void ModeTimeTable::handleEvents()
@@ -43,47 +62,47 @@ void ModeTimeTable::handleEvents()
     {
         if(currentTalk == 0)
         {
-            currentTalk = sTalks.size() - 1;
+            currentTalk = sTalks->size() - 1;
         }
         else
         {
             currentTalk--;
         }
 
-        Talk* talk = sTalks.get(currentTalk);
-        title = talk->title;
-        room = talk->room;
-        speaker = talk->speaker;
-        date = talk->date;
-        start = talk->start;
-        end = talk->end;
+        initCurrentTalk();
     }
 
     if(eh->isRightJustPressed())
     {
         currentTalk++;
-        if(currentTalk >= sTalks.size())
+        if(currentTalk >= sTalks->size())
         {
             currentTalk = 0;
         }
 
-        Talk* talk = sTalks.get(currentTalk);
-        title = talk->title;
-        room = talk->room;
-        speaker = talk->speaker;
-        date = talk->date;
-        start = talk->start;
-        end = talk->end;
+        initCurrentTalk();
     }
 }
 
 void ModeTimeTable::paintFrameInternal()
 {
+    u8g2->setFont(u8g2_font_6x10_tf);
+
+    // lazy load since u8g2 is only set after the first round...
+    if(titleWidth == 0)
+    {
+        titleWidth = u8g2->getUTF8Width(title.c_str());
+    }
+
+    // lazy load since u8g2 is only set after the first round...
+    if(speakerWidth == 0)
+    {
+        speakerWidth = u8g2->getUTF8Width(speaker.c_str());
+    }
+
+    // now do the drawing...
     u8g2->firstPage();
     do {
-
-        u8g2->setFont(u8g2_font_6x10_tf);
-
         /*
         hs->print("Current talk: ");
         hs->print(currentTalk);
@@ -91,31 +110,85 @@ void ModeTimeTable::paintFrameInternal()
         hs->println(sTalks.size());
          */
 
-        Talk* talk = sTalks.get(currentTalk);
         if(currentTalk > 0)
         {
             u8g2->drawUTF8(0, 8, "<");
         }
 
-        u8g2->drawUTF8(15, 8, room.c_str());
-        u8g2->drawUTF8(25, 8, date.c_str());
-        u8g2->drawUTF8(50, 8, start.c_str());
-        u8g2->drawUTF8(85, 8, end.c_str());
+        u8g2->drawUTF8(10, 8, "Room: ");
+        u8g2->drawUTF8(30, 8, room.c_str());
+        u8g2->drawUTF8(65, 8, date.c_str());
 
-        if(currentTalk < sTalks.size() -1)
+        if(currentTalk < sTalks->size() -1)
         {
             u8g2->drawUTF8(116, 8, ">");
         }
 
-        u8g2->drawUTF8(0, 16, title.substring(0, 20).c_str());
-        if(title.length() > 20)
-        {
-            // if title <= 20 chars, only show one line, otherwise
-            u8g2->drawUTF8(0, 24, title.substring(20).c_str());
-        }
-        u8g2->drawUTF8(0, 32, speaker.c_str());
+        u8g2->drawUTF8(20, 16, start.c_str());
+        u8g2->drawUTF8(50, 16, "-");
+        u8g2->drawUTF8(85, 16, end.c_str());
+
+        u8g2->drawUTF8(titleOffset, 24, title.c_str());
+
+        u8g2->drawUTF8(speakerOffset, 32, speaker.c_str());
 
     } while ( u8g2->nextPage() );
+
+    // do only scroll if wider than display
+    if(titleWidth > 128)
+    {
+        if (titleScrollLeft)
+        {
+            titleOffset -= 2;
+        }
+        else
+        {
+            titleOffset += 2;
+        }
+
+        if (titleWidth - (titleOffset * -1) <= 126)
+        {
+            titleScrollLeft = false;
+        }
+
+        if (titleOffset >= 2)
+        {
+            titleScrollLeft = true;
+        }
+    }
+
+    if(speakerWidth > 128)
+    {
+        if(speakerScrollLeft)
+        {
+            speakerOffset -= 2;
+        }
+        else
+        {
+            speakerOffset += 2;
+        }
+
+        if(speakerWidth - (speakerOffset * -1) <= 126)
+        {
+            speakerScrollLeft = false;
+        }
+
+        if(speakerOffset >= 2)
+        {
+            speakerScrollLeft = true;
+        }
+    }
+
+    /*
+    hs->print("titleWidth: ");
+    hs->print(titleWidth);
+    hs->print(" titleOffset: ");
+    hs->print(titleOffset);
+    hs->print(" titleScrollLeft: ");
+    hs->print(titleScrollLeft);
+    hs->print(" titleWidth - (titleOffset * -1) <= 128: ");
+    hs->println(titleWidth - (titleOffset * -1) <= 128);
+     */
 }
 
 bool ModeTimeTable::loadTimeTable()
@@ -164,7 +237,7 @@ bool ModeTimeTable::loadTimeTable()
                 //Serial.print(speaker);
                 //Serial.print(": ");
                 //Serial.println(String(title));
-                sTalks.add(t);
+                sTalks->add(*t);
 
                 //hs->println(F("added to list"));
             }

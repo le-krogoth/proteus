@@ -25,7 +25,7 @@ ModeManager::ModeManager(EventHandler* const e, HardwareSerial* const hws)
     eh = e;
     hs = hws;
 
-    setMode(MODE_DEFAULT, MODE_DEFAULT);
+    setMode(ModeSelectMode::M_MODE_DEFAULT, ModeSelectMode::M_MODE_DEFAULT);
 }
 
 void ModeManager::checkEvents()
@@ -41,14 +41,14 @@ void ModeManager::checkEvents()
         // if so, set new mode to selected mode
         // if not change to select mode
 
-        if(currentMode == MODE_SELECTMODE)
+        if(currentMode == ModeSelectMode::M_SELECT_MODE)
         {
             ModeSelectMode* m = (ModeSelectMode*)getCurrentModeObject();
             hs->print("********************** ");
             hs->print("Selected Mode is: ");
             hs->println(m->getSelectedMode());
 
-            currentMode = m->getSelectedMode() + 1;
+            currentMode = m->getSelectedMode();
             setMode(currentMode, 0);
         }
         else
@@ -57,71 +57,7 @@ void ModeManager::checkEvents()
             currentMode = 0;
             setMode(currentMode, oldMode);
         }
-
-/*
-
-        currentMode += 1;
-
-        if(currentMode > MODE_COUNT)
-        {
-            currentMode = 1;
-        }
-
-        //hs->print("PrgJustPressed. New Mode: ");
-        hs->println(currentMode);
-
-        setMode(currentMode);
-        */
-        /*
-        // if we are in the selectmode mode, user wants to leave
-        // otherwise user wants to enter the selectmode mode.
-        if(currentMode == MODE_SELECTMODE)
-        {
-            // TODO
-            // find out which one was selected, ask the current module for that...
-            setMode(MODE_DEFAULT);
-        }
-        else
-        {
-            setMode(MODE_SELECTMODE);
-        }
-         */
     }
-
-    //hs->println("if is Right");
-/*
-    if(eh->isRightJustPressed())
-    {
-        currentMode += 1;
-
-        if(currentMode > MODE_COUNT)
-        {
-            currentMode = 1;
-        }
-
-        //hs->print("RightJustPressed. New Mode: ");
-        hs->println(currentMode);
-
-        setMode(currentMode);
-    }
-*/
-    /*
-    if(ev->isLeftJustPressed() && ev->isRightPressed())
-    {
-        mm->nextMode();
-    }
-
-    if(ev->isRightJustPressed() && ev->isLeftPressed())
-    {
-        mm->nextMode();
-    }
-
-    if(currentMode != mm->getCurrentMode())
-    {
-        Serial.print("Switching Mode to: ");
-        Serial.println(mm->getCurrentMode());
-    }
-     */
 }
 
 uint8_t ModeManager::getCurrentMode()
@@ -136,9 +72,9 @@ BaseMode* ModeManager::getCurrentModeObject()
 
 void ModeManager::setMode(uint8_t newMode, uint8_t oldMode)
 {
-    if(newMode < 0 || newMode > MODE_COUNT)
+    if(newMode < 0 || newMode >= ModeSelectMode::M_MODE_COUNT)
     {
-        currentMode = MODE_DEFAULT;
+        currentMode = ModeSelectMode::M_MODE_DEFAULT;
     }
     else
     {
@@ -156,42 +92,40 @@ void ModeManager::setMode(uint8_t newMode, uint8_t oldMode)
 
     switch(currentMode)
     {
-        case MODE_SELECTMODE:
-            hs->println("SELECTMODE");
+        case ModeSelectMode::M_SELECT_MODE:
             currentModeObject = new ModeSelectMode(oldMode, eh, hs);
             break;
-        case MODE_LOGO:
-            hs->println("LOGO");
-            currentModeObject = new ModeUnicorn(eh, hs);
+        case ModeSelectMode::M_SETUP_MODE:
+            currentModeObject = new ModeSetup(eh, hs);
             break;
-        case MODE_GAME_A:
-            hs->println("UNICORN");
-            currentModeObject = new ModeUnicorn(eh, hs);
+        case ModeSelectMode::M_KNIGHT_RIDER:
+            currentModeObject = new ModeKnightRider(eh, hs);
             break;
-        case MODE_TIMETABLE:
-            hs->println("TIMETABLE");
-            //currentModeObject = new ModeUnicorn(eh, hs);
+        case ModeSelectMode::M_NICKNAME:
+            currentModeObject = new ModeNickname(eh, hs);
+            break;
+        case ModeSelectMode::M_LOGO:
+            currentModeObject = new ModeLogo(eh, hs);
+            break;
+        case ModeSelectMode::M_TIMETABLE:
             currentModeObject = new ModeTimeTable(eh, hs);
             break;
+        case ModeSelectMode::M_UNICORN_GAME:
+            currentModeObject = new ModeUnicorn(eh, hs);
+            break;
+        case ModeSelectMode::M_AFTER_DARK:
+            currentModeObject = new BaseMode(eh, hs);
+            break;
+        case ModeSelectMode::M_WIFISCANNER:
+            currentModeObject = new BaseMode(eh, hs);
+            break;
+        case ModeSelectMode::M_GAME2:
+            currentModeObject = new BaseMode(eh, hs);
+            break;
         default:
-            hs->println("DEFAULT");
             currentModeObject = new BaseMode(eh, hs);
             break;
     }
 
     hs->println("Object instantiated");
 }
-
-/*
-uint8_t ModeManager::nextMode()
-{
-    currentMode += 1;
-
-    if(currentMode > MODE_COUNT)
-    {
-        currentMode = 1;
-    }
-
-    return currentMode;
-}
- */

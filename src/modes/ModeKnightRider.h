@@ -18,41 +18,26 @@
  ** along with this program. If not, see <http://www.gnu.org/licenses/>.
  **
  ** -----------------------------------------------------------------------------*/
-#ifndef modemanager_h
-#define modemanager_h
+#ifndef mode_knightrider_h
+#define mode_knightrider_h
 
-#include <Arduino.h>
-#include "EventHandler.h"
-#include "modes/BaseMode.h"
-#include "modes/ModeTimeTable.h"
-#include "modes/ModeUnicorn.h"
-#include "modes/ModeSelectMode.h"
-#include "modes/ModeSetup.h"
-#include "modes/ModeKnightRider.h"
-#include "modes/ModeNickname.h"
-#include "modes/ModeLogo.h"
+#include <U8g2lib.h>
+#include "../EventHandler.h"
+#include "BaseMode.h"
 
-class ModeManager
+class ModeKnightRider : public BaseMode
 {
 public:
-    ModeManager(EventHandler* const e, HardwareSerial* const hws);
+    ModeKnightRider(EventHandler* const e, HardwareSerial* const hws);
 
-    void checkEvents();
-
-    uint8_t getCurrentMode();
-    BaseMode* getCurrentModeObject();
-
-    void setMode(uint8_t newMode, uint8_t oldMode);
+    void handleEvents();
+    //void paintFrame(U8G2_SSD1306_128X32_UNIVISION_F_SW_I2C* const u8g2);
+    void paintFrameInternal();
 
 protected:
 
-
 private:
-    uint8_t currentMode;
-    BaseMode* currentModeObject = NULL;
 
-    HardwareSerial* hs = NULL;
-    EventHandler* eh = NULL;
 };
 
-#endif
+#endif // mode_knightrider_h

@@ -91,13 +91,15 @@ void ModeTimeTable::paintFrameInternal()
     // lazy load since u8g2 is only set after the first round...
     if(titleWidth == 0)
     {
-        titleWidth = u8g2->getUTF8Width(title.c_str());
+        titleWidth = title.length() * 10;
+        //titleWidth = u8g2->getUTF8Width(title.c_str());
     }
 
     // lazy load since u8g2 is only set after the first round...
     if(speakerWidth == 0)
     {
-        speakerWidth = u8g2->getUTF8Width(speaker.c_str());
+        speakerWidth = speaker.length() * 10;
+        //speakerWidth = u8g2->getUTF8Width(speaker.c_str());
     }
 
     // now do the drawing...

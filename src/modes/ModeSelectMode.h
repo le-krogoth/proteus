@@ -22,6 +22,7 @@
 #define mode_selectmode_h
 
 #include <U8g2lib.h>
+#include <pod/SimpleList.h>
 #include "../EventHandler.h"
 #include "BaseMode.h"
 
@@ -36,10 +37,44 @@ public:
 
     uint8_t getSelectedMode();
 
+    void loadApps();
+    void loadApp(uint8_t id, const char* name);
+
+    static const uint8_t M_MODE_COUNT   = 10;
+
+    static const uint8_t M_MODE_DEFAULT = 0;
+
+    static const uint8_t M_SELECT_MODE  = 0;
+    static const uint8_t M_SETUP_MODE   = 1;
+
+    static const uint8_t M_KNIGHT_RIDER = 2;
+    static const uint8_t M_NICKNAME     = 3;
+    static const uint8_t M_LOGO         = 4;
+    static const uint8_t M_TIMETABLE    = 5;
+    static const uint8_t M_UNICORN_GAME = 6;
+    static const uint8_t M_AFTER_DARK   = 7;
+    static const uint8_t M_WIFISCANNER  = 8;
+    static const uint8_t M_GAME2        = 9;
+
 protected:
 
 private:
-    uint8_t selectedMode = 0;
+    uint8_t selectedMode = M_SETUP_MODE;
+    uint8_t viewPos = 1;
+
+    const char* DISPLAY_MODES[M_MODE_COUNT] = {
+            "Select Mode",
+            "Configure your badge",
+            "Knight Rider",
+            "Show Nickname",
+            "Show Logo",
+            "Timetable",
+            "Unicorn",
+            "After Dark",
+            "Wifi Scanner",
+            "Spiral"
+    };
+
 };
 
 #endif

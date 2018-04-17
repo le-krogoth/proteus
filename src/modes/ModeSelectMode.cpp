@@ -24,11 +24,30 @@ ModeSelectMode::ModeSelectMode(uint8_t currentMode, EventHandler *const e, Hardw
 {
     // this is a bit of a hack, but the selected mode in here == the modes outside - 1
     // but we want to make sure that we do not lower the uint below 0...
-    selectedMode = (currentMode > 0) ? currentMode - 1 : currentMode;
+    // NOT TRUE ANYMORE
+    // selectedMode = (currentMode > 0) ? currentMode - 1 : currentMode;
 
-    if(selectedMode >= 8)
+    selectedMode = currentMode;
+
+    if(selectedMode >= M_MODE_COUNT)
     {
-        selectedMode = 0;
+        selectedMode = 1;
+    }
+    else if (selectedMode <= 0)
+    {
+        selectedMode = 1;
+    }
+
+
+    viewPos = selectedMode - 1;
+
+    if(viewPos <= 0)
+    {
+        viewPos = 1;
+    }
+    else if(viewPos >= (M_MODE_COUNT - 3))
+    {
+        viewPos = (M_MODE_COUNT - 4);
     }
 }
 
@@ -41,22 +60,31 @@ void ModeSelectMode::handleEvents()
 {
     if(eh->isLeftJustPressed())
     {
-        if(selectedMode == 0)
+        if(selectedMode > 1)
         {
-            selectedMode = 8 - 1;
+            selectedMode--;
         }
         else
         {
-            selectedMode--;
+            selectedMode = 1;
+        }
+
+        if(selectedMode - viewPos < 2 && viewPos > 1)
+        {
+            viewPos--;
         }
     }
 
     if(eh->isRightJustPressed())
     {
-        selectedMode++;
-        if(selectedMode >= 8)
+        if(selectedMode < M_MODE_COUNT - 1)
         {
-            selectedMode = 0;
+            selectedMode++;
+        }
+
+        if(selectedMode - viewPos > 1 && viewPos < (M_MODE_COUNT - 4))
+        {
+            viewPos++;
         }
     }
 }
@@ -66,28 +94,16 @@ void ModeSelectMode::paintFrameInternal()
     u8g2->firstPage();
     do {
 
-//u8g2.setFont(u8g2_font_logisoso32_tf);
-//u8g2->setFont(u8g2_font_m2icon_7_tf);
-//u8g2.drawUTF8(0,31,"Proteus");
-
         u8g2->setFont(u8g2_font_6x10_tf);
-        u8g2->drawUTF8(6, 8, "Setup");
-        u8g2->drawUTF8(6, 16, "Show Logo");
-        u8g2->drawUTF8(6, 24, "Timetable");
-        u8g2->drawUTF8(6, 32, "Show Nick");
 
-        u8g2->drawUTF8(70, 8, "Yatsee");
-        u8g2->drawUTF8(70, 16, "Fireplace");
-        u8g2->drawUTF8(70, 24, "Bomber Pac");
-        u8g2->drawUTF8(70, 32, "Unicorn");
+        for(int i = viewPos; i < viewPos + 4; i++)
+        {
+            u8g2->drawUTF8(6, ((i - viewPos) * 8) + 8, DISPLAY_MODES[i]);
 
-        if(selectedMode < 4)
-        {
-            u8g2->drawUTF8(0, (selectedMode * 8) + 8, ">");
-        }
-        else
-        {
-            u8g2->drawUTF8(64, (selectedMode * 8) - 24, ">");
+            if(i == selectedMode)
+            {
+                u8g2->drawUTF8(0, ((i - viewPos) * 8) + 8, ">");
+            }
         }
 
     } while ( u8g2->nextPage() );

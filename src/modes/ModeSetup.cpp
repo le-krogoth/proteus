@@ -18,41 +18,27 @@
  ** along with this program. If not, see <http://www.gnu.org/licenses/>.
  **
  ** -----------------------------------------------------------------------------*/
-#ifndef modemanager_h
-#define modemanager_h
+#include "ModeSetup.h"
 
-#include <Arduino.h>
-#include "EventHandler.h"
-#include "modes/BaseMode.h"
-#include "modes/ModeTimeTable.h"
-#include "modes/ModeUnicorn.h"
-#include "modes/ModeSelectMode.h"
-#include "modes/ModeSetup.h"
-#include "modes/ModeKnightRider.h"
-#include "modes/ModeNickname.h"
-#include "modes/ModeLogo.h"
-
-class ModeManager
+ModeSetup::ModeSetup(EventHandler *const e, HardwareSerial *const hws) : BaseMode (e, hws)
 {
-public:
-    ModeManager(EventHandler* const e, HardwareSerial* const hws);
 
-    void checkEvents();
+}
 
-    uint8_t getCurrentMode();
-    BaseMode* getCurrentModeObject();
+void ModeSetup::handleEvents()
+{
 
-    void setMode(uint8_t newMode, uint8_t oldMode);
+}
 
-protected:
+void ModeSetup::paintFrameInternal()
+{
+    u8g2->firstPage();
+    do {
+
+        u8g2->setFont(u8g2_font_logisoso32_tf);
+        u8g2->drawUTF8(0,31,"Setup");
+
+    } while ( u8g2->nextPage() );
+}
 
 
-private:
-    uint8_t currentMode;
-    BaseMode* currentModeObject = NULL;
-
-    HardwareSerial* hs = NULL;
-    EventHandler* eh = NULL;
-};
-
-#endif

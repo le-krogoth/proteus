@@ -32,17 +32,8 @@ ModeTimeTable::ModeTimeTable(EventHandler *const e, HardwareSerial *const hws) :
 
 void ModeTimeTable::initCurrentTalk()
 {
-    Talk talk = sTalks->get(currentTalk);
-
     hs->print("Init current talk: ");
     hs->println(currentTalk);
-
-    title = talk.title;
-    room = talk.room;
-    speaker = talk.speaker;
-    date = talk.date;
-    start = talk.start;
-    end = talk.end;
 
     titleOffset = 0;
     speakerOffset = 0;
@@ -86,20 +77,22 @@ void ModeTimeTable::handleEvents()
 
 void ModeTimeTable::paintFrameInternal()
 {
+    Talk talk = sTalks->get(currentTalk);
+
     u8g2->setFont(u8g2_font_6x10_tf);
 
     // lazy load since u8g2 is only set after the first round...
     if(titleWidth == 0)
     {
-        titleWidth = title.length() * 10;
-        //titleWidth = u8g2->getUTF8Width(title.c_str());
+        //titleWidth = talk.title.length() * 10;
+        titleWidth = u8g2->getUTF8Width(talk.title.c_str());
     }
 
     // lazy load since u8g2 is only set after the first round...
     if(speakerWidth == 0)
     {
-        speakerWidth = speaker.length() * 10;
-        //speakerWidth = u8g2->getUTF8Width(speaker.c_str());
+        //speakerWidth = talk.speaker.length() * 10;
+        speakerWidth = u8g2->getUTF8Width(talk.speaker.c_str());
     }
 
     // now do the drawing...
@@ -118,21 +111,21 @@ void ModeTimeTable::paintFrameInternal()
         }
 
         u8g2->drawUTF8(10, 8, "Room: ");
-        u8g2->drawUTF8(30, 8, room.c_str());
-        u8g2->drawUTF8(65, 8, date.c_str());
+        u8g2->drawUTF8(30, 8, talk.room.c_str());
+        u8g2->drawUTF8(65, 8, talk.date.c_str());
 
         if(currentTalk < sTalks->size() -1)
         {
             u8g2->drawUTF8(116, 8, ">");
         }
 
-        u8g2->drawUTF8(20, 16, start.c_str());
+        u8g2->drawUTF8(20, 16, talk.start.c_str());
         u8g2->drawUTF8(50, 16, "-");
-        u8g2->drawUTF8(85, 16, end.c_str());
+        u8g2->drawUTF8(85, 16, talk.end.c_str());
 
-        u8g2->drawUTF8(titleOffset, 24, title.c_str());
+        u8g2->drawUTF8(titleOffset, 24, talk.title.c_str());
 
-        u8g2->drawUTF8(speakerOffset, 32, speaker.c_str());
+        u8g2->drawUTF8(speakerOffset, 32, talk.speaker.c_str());
 
     } while ( u8g2->nextPage() );
 
@@ -228,12 +221,12 @@ bool ModeTimeTable::loadTimeTable()
 
                 Talk* t = new Talk();
 
-                t->title = talk["title"];
-                t->speaker = talk["speaker"];
-                t->room = talk["room"];
-                t->date = talk["date"];
-                t->start = talk["start"];
-                t->end = talk["end"];
+                t->title = talk["title"].as<String>();
+                t->speaker = talk["speaker"].as<String>();
+                t->room = talk["room"].as<String>();
+                t->date = talk["date"].as<String>();
+                t->start = talk["start"].as<String>();
+                t->end = talk["end"].as<String>();
 
                 //hs->println(F("after, before adding to list"));
                 //Serial.print(speaker);

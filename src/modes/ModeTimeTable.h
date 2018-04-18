@@ -47,13 +47,6 @@ private:
     //LinkedList<Talk*> lTalks = LinkedList<Talk*>();
     SimpleList<Talk>* sTalks = new SimpleList<Talk>;
 
-    String title = ".";
-    String room = ".";
-    String speaker = ".";
-    String date = ".";
-    String start = ".";
-    String end = ".";
-
     int titleOffset = 0;
     int speakerOffset = 0;
 

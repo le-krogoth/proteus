@@ -21,16 +21,17 @@
 #ifndef PROTEUS_TALK_H
 #define PROTEUS_TALK_H
 
+#include <Arduino.h>
 
 class Talk
 {
 public:
-    const char* title;
-    const char* speaker;
-    const char* room;
-    const char* date;
-    const char* start;
-    const char* end;
+    String title;
+    String speaker;
+    String room;
+    String date;
+    String start;
+    String end;
 };
 
 

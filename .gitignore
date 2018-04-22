@@ -34,5 +34,7 @@
 # remove generated files
 /.pioenvs/*
 /cmake-build-debug/*
-/CMakeLists.txt
-/CMakeListsPrivate.txt
+CMakeLists.txt
+CMakeListsPrivate.txt
+.pioenvs
+.piolibdeps

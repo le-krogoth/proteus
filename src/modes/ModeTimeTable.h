@@ -47,8 +47,8 @@ private:
     //LinkedList<Talk*> lTalks = LinkedList<Talk*>();
     SimpleList<Talk>* sTalks = new SimpleList<Talk>;
 
-    uint16_t titleOffset = 0;
-    uint16_t speakerOffset = 0;
+    int16_t titleOffset = 0;
+    int16_t speakerOffset = 0;
 
     bool titleScrollLeft = true;
     bool speakerScrollLeft = true;

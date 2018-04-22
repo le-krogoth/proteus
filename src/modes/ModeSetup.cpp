@@ -149,6 +149,8 @@ String ModeSetup::getMAC()
 
 void ModeSetup::handleNotFound()
 {
+    hs->println("handle not found");
+
     String url = server->uri();
 
     hs->println(url);

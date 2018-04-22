@@ -44,7 +44,7 @@ void ModeTimeTable::initCurrentTalk()
     titleWidth = 0;
     speakerWidth = 0;
 
-    hs->println("End of initcurrenttalk");
+    //hs->println("End of initcurrenttalk");
 }
 
 void ModeTimeTable::handleEvents()

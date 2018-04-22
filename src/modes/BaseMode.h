@@ -28,10 +28,12 @@ class BaseMode
 {
 public:
     BaseMode(EventHandler* const e, HardwareSerial* const hws);
+    ~BaseMode();
 
     virtual void handleEvents();
     virtual void paintFrame(U8G2_SSD1306_128X32_UNIVISION_F_SW_I2C* const u8g2);
     virtual void paintFrameInternal();
+    virtual void cleanup();
 
     /// Clears display.
     void clear();

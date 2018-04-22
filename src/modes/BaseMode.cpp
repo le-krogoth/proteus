@@ -26,6 +26,14 @@ BaseMode::BaseMode(EventHandler* const e, HardwareSerial* const hws)
     hs = hws;
 }
 
+BaseMode::~BaseMode()
+{
+    cleanup();
+}
+
+// TODO
+// better have that given in the constructor (via modemanager) than doing it
+// in every event. I think we can spare memory for that additional pointer...
 void BaseMode::lazySetU8g2(U8G2_SSD1306_128X32_UNIVISION_F_SW_I2C* const u8)
 {
     // lazy setting
@@ -36,6 +44,11 @@ void BaseMode::lazySetU8g2(U8G2_SSD1306_128X32_UNIVISION_F_SW_I2C* const u8)
 }
 
 void BaseMode::handleEvents()
+{
+    // do nothing
+}
+
+void BaseMode::cleanup()
 {
     // do nothing
 }

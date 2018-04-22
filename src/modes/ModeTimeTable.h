@@ -47,14 +47,14 @@ private:
     //LinkedList<Talk*> lTalks = LinkedList<Talk*>();
     SimpleList<Talk>* sTalks = new SimpleList<Talk>;
 
-    int titleOffset = 0;
-    int speakerOffset = 0;
+    uint16_t titleOffset = 0;
+    uint16_t speakerOffset = 0;
 
     bool titleScrollLeft = true;
     bool speakerScrollLeft = true;
 
-    u8g2_uint_t titleWidth = 0;
-    u8g2_uint_t speakerWidth = 0;
+    uint16_t titleWidth = 0;
+    uint16_t speakerWidth = 0;
 
     void initCurrentTalk();
 };

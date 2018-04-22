@@ -22,11 +22,6 @@
 
 ModeSelectMode::ModeSelectMode(uint8_t currentMode, EventHandler *const e, HardwareSerial *const hws) : BaseMode (e, hws)
 {
-    // this is a bit of a hack, but the selected mode in here == the modes outside - 1
-    // but we want to make sure that we do not lower the uint below 0...
-    // NOT TRUE ANYMORE
-    // selectedMode = (currentMode > 0) ? currentMode - 1 : currentMode;
-
     selectedMode = currentMode;
 
     if(selectedMode >= M_MODE_COUNT)

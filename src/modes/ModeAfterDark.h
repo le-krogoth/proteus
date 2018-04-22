@@ -18,63 +18,26 @@
  ** along with this program. If not, see <http://www.gnu.org/licenses/>.
  **
  ** -----------------------------------------------------------------------------*/
-#ifndef mode_setup_h
-#define mode_setup_h
+#ifndef mode_afterdark_h
+#define mode_afterdark_h
 
 #include <U8g2lib.h>
-
-//#include "ESPAsyncTCP.h"
-//#include "ESPAsyncWebServer.h"
-
-#include <Arduino.h>
-#include <ArduinoJson.h>
-
-#include <FS.h>
-#include <ESP8266WebServer.h>
-
 #include "../EventHandler.h"
 #include "BaseMode.h"
 
-#include "global.h"
-
-
-class ModeSetup : public BaseMode
+class ModeAfterDark : public BaseMode
 {
 public:
-    ModeSetup(EventHandler* const e, HardwareSerial* const hws);
-    ~ModeSetup();
+    ModeAfterDark(EventHandler* const e, HardwareSerial* const hws);
 
     void handleEvents();
     //void paintFrame(U8G2_SSD1306_128X32_UNIVISION_F_SW_I2C* const u8g2);
     void paintFrameInternal();
-    void cleanup();
 
 protected:
 
 private:
 
-    ESP8266WebServer* server = new ESP8266WebServer(80);
-
-    String getMAC();
-
-    String AP_SSID = "";
-    String AP_PWD = "";
-
-    // Configuration Handler
-    void handleGetConfig();
-    void handleSetConfig();
-
-    // HW Info Handler
-    void handleGetHWInfo();
-
-    // File Handler
-    void handleFileRequest();
-
-    // Helpers
-    void handleNotFound();
-    bool sendFromSPIFFS(String path);
-    void returnOK();
-
 };
 
-#endif // mode_setup_h
+#endif // mode_afterdark_h

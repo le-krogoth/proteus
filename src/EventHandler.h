@@ -25,9 +25,11 @@
 
 /*
  * Search for a file called "*eagle.app.v6.*.ld"
+ * It usually is at:
+ * /home/user/.platformio/packages/framework-arduinoespressif8266/tools/sdk/ld/eagle.app.v6.common.ld
  * Then add this line:
  * PROVIDE(PIN_IN = 0x60000318);
- * accessing this will give you access to the register
+ * accessing PIN_IN will give you access to the register
  * with all the pins current states
  * */
 extern volatile uint32_t PIN_IN;

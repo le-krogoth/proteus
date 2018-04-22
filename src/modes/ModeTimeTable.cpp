@@ -84,15 +84,15 @@ void ModeTimeTable::paintFrameInternal()
     // lazy load since u8g2 is only set after the first round...
     if(titleWidth == 0)
     {
-        //titleWidth = talk.title.length() * 10;
-        titleWidth = u8g2->getUTF8Width(talk.title.c_str());
+        titleWidth = talk.title.length() * 6;
+        //titleWidth = u8g2->getUTF8Width(talk.title.c_str());
     }
 
     // lazy load since u8g2 is only set after the first round...
     if(speakerWidth == 0)
     {
-        //speakerWidth = talk.speaker.length() * 10;
-        speakerWidth = u8g2->getUTF8Width(talk.speaker.c_str());
+        speakerWidth = talk.speaker.length() * 6;
+        //speakerWidth = u8g2->getUTF8Width(talk.speaker.c_str());
     }
 
     // now do the drawing...
@@ -111,8 +111,8 @@ void ModeTimeTable::paintFrameInternal()
         }
 
         u8g2->drawUTF8(10, 8, "Room: ");
-        u8g2->drawUTF8(30, 8, talk.room.c_str());
-        u8g2->drawUTF8(65, 8, talk.date.c_str());
+        u8g2->drawUTF8(50, 8, talk.room.c_str());
+        u8g2->drawUTF8(75, 8, talk.date.c_str());
 
         if(currentTalk < sTalks->size() -1)
         {
@@ -173,23 +173,12 @@ void ModeTimeTable::paintFrameInternal()
             speakerScrollLeft = true;
         }
     }
-
-    /*
-    hs->print("titleWidth: ");
-    hs->print(titleWidth);
-    hs->print(" titleOffset: ");
-    hs->print(titleOffset);
-    hs->print(" titleScrollLeft: ");
-    hs->print(titleScrollLeft);
-    hs->print(" titleWidth - (titleOffset * -1) <= 128: ");
-    hs->println(titleWidth - (titleOffset * -1) <= 128);
-     */
 }
 
 bool ModeTimeTable::loadTimeTable()
 {
     // open file for reading
-    File f = SPIFFS.open("/ttbl.json", "r");
+    File f = SPIFFS.open("/www/ttbl.json", "r");
     if (!f)
     {
         //hs->println("file open failed in modetimetable");

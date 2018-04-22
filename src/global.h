@@ -18,44 +18,10 @@
  ** along with this program. If not, see <http://www.gnu.org/licenses/>.
  **
  ** -----------------------------------------------------------------------------*/
-#ifndef modemanager_h
-#define modemanager_h
 
-#include <Arduino.h>
-#include "EventHandler.h"
-#include "modes/BaseMode.h"
-#include "modes/ModeTimeTable.h"
-#include "modes/ModeUnicorn.h"
-#include "modes/ModeSelectMode.h"
-#include "modes/ModeSetup.h"
-#include "modes/ModeKnightRider.h"
-#include "modes/ModeNickname.h"
-#include "modes/ModeLogo.h"
-#include "modes/ModeAfterDark.h"
-#include "modes/ModeWifiScanner.h"
+#ifndef PROTEUS_GLOBAL_H
+#define PROTEUS_GLOBAL_H
 
 
-class ModeManager
-{
-public:
-    ModeManager(EventHandler* const e, HardwareSerial* const hws);
 
-    void checkEvents();
-
-    uint8_t getCurrentMode();
-    BaseMode* getCurrentModeObject();
-
-    void setMode(uint8_t newMode, uint8_t oldMode);
-
-protected:
-
-
-private:
-    uint8_t currentMode;
-    BaseMode* currentModeObject = NULL;
-
-    HardwareSerial* hs = NULL;
-    EventHandler* eh = NULL;
-};
-
-#endif
+#endif //PROTEUS_GLOBAL_H

@@ -36,7 +36,6 @@ void ModeManager::checkEvents()
 
     if(eh->isPrgJustPressed())
     {
-        // TODO
         // check if just left MODE_SELECTMODE
         // if so, set new mode to selected mode
         // if not change to select mode
@@ -84,6 +83,13 @@ void ModeManager::setMode(uint8_t newMode, uint8_t oldMode)
     if(currentModeObject)
     {
         hs->println("Freeing old object");
+
+        // Todo, activate for all...
+        if(oldMode == ModeSelectMode::M_SETUP_MODE)
+        {
+            currentModeObject->cleanup();
+        }
+
         delete currentModeObject;
     }
 
@@ -114,10 +120,10 @@ void ModeManager::setMode(uint8_t newMode, uint8_t oldMode)
             currentModeObject = new ModeUnicorn(eh, hs);
             break;
         case ModeSelectMode::M_AFTER_DARK:
-            currentModeObject = new BaseMode(eh, hs);
+            currentModeObject = new ModeAfterDark(eh, hs);
             break;
         case ModeSelectMode::M_WIFISCANNER:
-            currentModeObject = new BaseMode(eh, hs);
+            currentModeObject = new ModeWifiScanner(eh, hs);
             break;
         case ModeSelectMode::M_GAME2:
             currentModeObject = new BaseMode(eh, hs);

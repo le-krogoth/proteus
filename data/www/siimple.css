@@ -4,8 +4,11 @@
  * @docs         https://www.siimple.xyz/
  * @license      MIT
 **/
- 
- @import url("mntsrt.css");
+
+/**
+removed for debugging purposes
+@import url("/mntsrt.css");
+**/
 html {
   font-family: "Montserrat", sans-serif;
   font-weight: normal;

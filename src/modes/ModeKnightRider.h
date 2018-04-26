@@ -38,6 +38,11 @@ protected:
 
 private:
 
+    int16_t offset = 0;
+
+    bool scrollLeft = false;
+
+
 };
 
 #endif // mode_knightrider_h

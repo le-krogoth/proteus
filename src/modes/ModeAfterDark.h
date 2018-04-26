@@ -34,9 +34,18 @@ public:
     //void paintFrame(U8G2_SSD1306_128X32_UNIVISION_F_SW_I2C* const u8g2);
     void paintFrameInternal();
 
+    //int compare(const void *a, const void *b);
+
 protected:
 
 private:
+    uint8_t counter = 0;
+
+    struct Flyer {       // Array of flying things
+        int16_t x, y;      // Top-left position * 16 (for subpixel pos updates)
+        int8_t  depth;     // Stacking order is also speed, 12-24 subpixels/frame
+        uint8_t frame;     // Animation frame; Toasters cycle 0-3, Toast=255
+    } flyer[4];
 
 };
 

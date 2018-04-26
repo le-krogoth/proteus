@@ -19,6 +19,7 @@
  **
  ** -----------------------------------------------------------------------------*/
 #include "ModeKnightRider.h"
+#include "grafx/gradient.h"
 
 ModeKnightRider::ModeKnightRider(EventHandler *const e, HardwareSerial *const hws) : BaseMode (e, hws)
 {
@@ -35,10 +36,35 @@ void ModeKnightRider::paintFrameInternal()
     u8g2->firstPage();
     do {
 
-        u8g2->setFont(u8g2_font_logisoso32_tf);
-        u8g2->drawUTF8(0,31,"KnightRider");
+        if(scrollLeft)
+        {
+            u8g2->drawXBMP(offset, 0, 96, 32, gradient_toleft_bits);
+        }
+        else
+        {
+            u8g2->drawXBMP(offset, 0, 96, 32, gradient_toright_bits);
+        }
 
     } while ( u8g2->nextPage() );
+
+    if (scrollLeft)
+    {
+        offset -= 8;
+    }
+    else
+    {
+        offset += 8;
+    }
+
+    if (offset >= 100)
+    {
+        scrollLeft = true;
+    }
+
+    if (offset <= -80)
+    {
+        scrollLeft = false;
+    }
 }
 
 

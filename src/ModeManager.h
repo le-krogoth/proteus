@@ -33,29 +33,34 @@
 #include "modes/ModeLogo.h"
 #include "modes/ModeAfterDark.h"
 #include "modes/ModeWifiScanner.h"
+#include "modes/ModePlayTrack.h"
 
 
 class ModeManager
 {
 public:
-    ModeManager(EventHandler* const e, HardwareSerial* const hws);
+    ModeManager(EventHandler* const e, Config* const c, U8G2_SSD1306_128X32_UNIVISION_F_SW_I2C* const u8, HardwareSerial* const hws);
 
     void checkEvents();
 
     uint8_t getCurrentMode();
     BaseMode* getCurrentModeObject();
 
-    void setMode(uint8_t newMode, uint8_t oldMode);
+    bool moduleWantsEnforcedFramerate();
+
+    void setMode(uint8_t newMode, uint8_t oldMode, bool storeMode = true);
 
 protected:
 
 
 private:
-    uint8_t currentMode;
+    uint8_t currentMode = 0;
     BaseMode* currentModeObject = NULL;
 
     HardwareSerial* hs = NULL;
     EventHandler* eh = NULL;
+    Config* conf = NULL;
+    U8G2_SSD1306_128X32_UNIVISION_F_SW_I2C* u8g2 = NULL;
 };
 
 #endif

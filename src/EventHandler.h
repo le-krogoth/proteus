@@ -59,18 +59,33 @@ public:
     boolean isPrgPressed();
     boolean isRightPressed();
     boolean isLeftPressed();
+    boolean isLeftAndRightPressed();
 
     // returns true if button was just pressed (previously unpressed)
     boolean isPrgJustPressed();
     boolean isRightJustPressed();
     boolean isLeftJustPressed();
+    boolean isLeftAndRightJustPressed();
+
+    // needed to check for easter eggs
+    std::string getKeyStream();
+    void clearKeyStream();
 
 protected:
 
 
 private:
+
+    static const uint8_t LENGTH_OF_EASTEREGG = 8;
+
     uint16_t lastBitmask = 0;
+// TODO
+    uint16_t last2Bitmask = 0; // needed to shift through the last few bitmasks to enable bothButtonsDown and justBothButtonsDown
+    uint16_t last3Bitmask = 0;
+    uint16_t last4Bitmask = 0;
     uint16_t currentBitmask = 0;
+
+    std::string sKeyStream = "";
 
     HardwareSerial* hs;
 };

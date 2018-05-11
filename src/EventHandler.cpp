@@ -27,8 +27,52 @@ EventHandler::EventHandler(HardwareSerial* const hws)
 
 void EventHandler::poll()
 {
+    // store history to find out if user has a both button down event happening
+    last4Bitmask = last3Bitmask;
+    last3Bitmask = last2Bitmask;
+    last2Bitmask = lastBitmask;
     lastBitmask = currentBitmask;
+
+    // get current button state
     currentBitmask = ((~PIN_IN) & (bit(0) | bit(12) | bit(13)));
+
+    // store button sequence for easter eggs
+    if(isLeftAndRightJustPressed())
+    {
+        sKeyStream += "B";
+    }
+    else if(isLeftJustPressed())
+    {
+        sKeyStream += "L";
+    }
+    else if(isRightJustPressed())
+    {
+        sKeyStream += "R";
+    }
+
+    //hs->print("keystream after button: ");
+    //hs->println(sKeyStream.c_str());
+
+    // make sure that the easter egg keystream does not grow beyond 10
+    if(sKeyStream.length() > LENGTH_OF_EASTEREGG)
+    {
+        sKeyStream = sKeyStream.substr(sKeyStream.length() - LENGTH_OF_EASTEREGG);
+        //sKeyStream.erase(sKeyStream.begin(), sKeyStream.end() - ));
+
+        //hs->print("keystream after cutting: ");
+        //hs->println(sKeyStream.c_str());
+    }
+}
+
+std::string EventHandler::getKeyStream()
+{
+    return sKeyStream;
+}
+
+// usually called when easter egg was triggered
+void EventHandler::clearKeyStream()
+{
+    sKeyStream = "";
 }
 
 boolean EventHandler::pressed(uint16_t buttons)
@@ -65,6 +109,10 @@ boolean EventHandler::isLeftPressed()
 {
     return pressed(LEFT_BUTTON_BIT);
 }
+boolean EventHandler::isLeftAndRightPressed()
+{
+    return pressed(LEFT_BUTTON_BIT) && pressed(RIGHT_BUTTON_BIT);
+}
 
 boolean EventHandler::isPrgJustPressed()
 {
@@ -77,4 +125,8 @@ boolean EventHandler::isRightJustPressed()
 boolean EventHandler::isLeftJustPressed()
 {
     return justPressed(LEFT_BUTTON_BIT);
+}
+boolean EventHandler::isLeftAndRightJustPressed()
+{
+    return justPressed(LEFT_BUTTON_BIT) && justPressed(RIGHT_BUTTON_BIT);
 }

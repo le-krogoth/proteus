@@ -140,7 +140,7 @@ void DisplayManager::handleFrame()
     m->handleEvents();
 
     //hs->println("paint frame");
-    m->paintFrame(u8g2);
+    m->paintFrame();
 }
 
 /*

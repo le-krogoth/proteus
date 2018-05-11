@@ -20,19 +20,77 @@
  ** -----------------------------------------------------------------------------*/
 #include "ModeManager.h"
 
-ModeManager::ModeManager(EventHandler* const e, HardwareSerial* const hws)
+ModeManager::ModeManager(EventHandler* const e, Config* const c, U8G2_SSD1306_128X32_UNIVISION_F_SW_I2C* const u8, HardwareSerial* const hws)
 {
     eh = e;
     hs = hws;
+    conf = c;
+    u8g2 = u8;
 
-    setMode(ModeSelectMode::M_MODE_DEFAULT, ModeSelectMode::M_MODE_DEFAULT);
+    // init the mode to the last one from the config
+    setMode(c->getCurrentMode(), ModeSelectMode::M_MODE_DEFAULT, false);
+}
+
+bool ModeManager::moduleWantsEnforcedFramerate()
+{
+    BaseMode* m = getCurrentModeObject();
+
+    if(m != NULL)
+    {
+        return m->getEnforceFramerate();
+    }
+    else
+    {
+        return true;
+    }
 }
 
 void ModeManager::checkEvents()
 {
     //hs->println("checkEvents");
 
-    //hs->println("if is Prg");
+    // check for easter eggs first
+    std::string sKeyStream = eh->getKeyStream();
+    if(sKeyStream == "LRLRLLRR")
+    {
+        // make sure to not just trigger again
+        eh->clearKeyStream();
+
+        uint8_t oldMode = currentMode;
+        currentMode = ModeSelectMode::M_EASTEREGG_1;
+        setMode(currentMode, oldMode);
+        return;
+    }
+    else if(sKeyStream == "RLRLRRLL")
+    {
+        // make sure to not just trigger again
+        eh->clearKeyStream();
+
+        uint8_t oldMode = currentMode;
+        currentMode = ModeSelectMode::M_EASTEREGG_1;
+        setMode(currentMode, oldMode);
+        return;
+    }
+    else if(sKeyStream == "RLRRLRLL")
+    {
+        // make sure to not just trigger again
+        eh->clearKeyStream();
+
+        uint8_t oldMode = currentMode;
+        currentMode = ModeSelectMode::M_PLAY_TRACK;
+        setMode(currentMode, oldMode);
+        return;
+    }
+    else if(sKeyStream == "LRBLRBLR")
+    {
+        // make sure to not just trigger again
+        eh->clearKeyStream();
+
+        uint8_t oldMode = currentMode;
+        currentMode = ModeSelectMode::M_EASTEREGG_1;
+        setMode(currentMode, oldMode);
+        return;
+    }
 
     if(eh->isPrgJustPressed())
     {
@@ -57,6 +115,8 @@ void ModeManager::checkEvents()
             setMode(currentMode, oldMode);
         }
     }
+
+
 }
 
 uint8_t ModeManager::getCurrentMode()
@@ -69,9 +129,11 @@ BaseMode* ModeManager::getCurrentModeObject()
     return currentModeObject;
 }
 
-void ModeManager::setMode(uint8_t newMode, uint8_t oldMode)
+void ModeManager::setMode(uint8_t newMode, uint8_t oldMode, bool storeMode)
 {
-    if(newMode < 0 || newMode >= ModeSelectMode::M_MODE_COUNT)
+    // remove the check for >= since easter egg modes are between 20 and XX
+    // if(newMode < 0 || newMode >= ModeSelectMode::M_MODE_COUNT)
+    if(newMode < 0)
     {
         currentMode = ModeSelectMode::M_MODE_DEFAULT;
     }
@@ -82,13 +144,9 @@ void ModeManager::setMode(uint8_t newMode, uint8_t oldMode)
 
     if(currentModeObject)
     {
-        hs->println("Freeing old object");
+        //hs->println("Freeing old object");
 
-        // Todo, activate for all...
-        if(oldMode == ModeSelectMode::M_SETUP_MODE)
-        {
-            currentModeObject->cleanup();
-        }
+        currentModeObject->cleanup();
 
         delete currentModeObject;
     }
@@ -96,42 +154,56 @@ void ModeManager::setMode(uint8_t newMode, uint8_t oldMode)
     hs->print("New mode is: ");
     hs->println(currentMode);
 
+    // make sure that the config file contains the current mode
+    // stores only standard modes, no easter eggs...
+    if(storeMode && currentMode < ModeSelectMode::M_MODE_COUNT)
+    {
+        conf->setCurrentMode(currentMode);
+        conf->storeConfig();
+    }
+
     switch(currentMode)
     {
         case ModeSelectMode::M_SELECT_MODE:
-            currentModeObject = new ModeSelectMode(oldMode, eh, hs);
+            currentModeObject = new ModeSelectMode(oldMode, eh, u8g2, hs);
             break;
         case ModeSelectMode::M_SETUP_MODE:
-            currentModeObject = new ModeSetup(eh, hs);
+            currentModeObject = new ModeSetup(eh, conf, u8g2, hs);
             break;
         case ModeSelectMode::M_KNIGHT_RIDER:
-            currentModeObject = new ModeKnightRider(eh, hs);
+            currentModeObject = new ModeKnightRider(eh, u8g2, hs);
             break;
         case ModeSelectMode::M_NICKNAME:
-            currentModeObject = new ModeNickname(eh, hs);
+            currentModeObject = new ModeNickname(eh, conf, u8g2, hs);
             break;
         case ModeSelectMode::M_LOGO:
-            currentModeObject = new ModeLogo(eh, hs);
+            currentModeObject = new ModeLogo(eh, u8g2, hs);
             break;
         case ModeSelectMode::M_TIMETABLE:
-            currentModeObject = new ModeTimeTable(eh, hs);
+            currentModeObject = new ModeTimeTable(eh, u8g2, hs);
             break;
         case ModeSelectMode::M_UNICORN_GAME:
-            currentModeObject = new ModeUnicorn(eh, hs);
+            currentModeObject = new ModeUnicorn(eh, u8g2, hs);
             break;
         case ModeSelectMode::M_AFTER_DARK:
-            currentModeObject = new ModeAfterDark(eh, hs);
+            currentModeObject = new ModeAfterDark(eh, u8g2, hs);
             break;
         case ModeSelectMode::M_WIFISCANNER:
-            currentModeObject = new ModeWifiScanner(eh, hs);
+            currentModeObject = new ModeWifiScanner(eh, u8g2, hs);
             break;
         case ModeSelectMode::M_GAME2:
-            currentModeObject = new BaseMode(eh, hs);
+            currentModeObject = new BaseMode(eh, u8g2, hs);
+            break;
+        case ModeSelectMode::M_EASTEREGG_1:
+            currentModeObject = new ModeUnicorn(eh, u8g2, hs);
+            break;
+        case ModeSelectMode::M_PLAY_TRACK:
+            currentModeObject = new ModePlayTrack(eh, u8g2, hs);
             break;
         default:
-            currentModeObject = new BaseMode(eh, hs);
+            currentModeObject = new BaseMode(eh, u8g2, hs);
             break;
     }
 
-    hs->println("Object instantiated");
+    //hs->println("Object instantiated");
 }

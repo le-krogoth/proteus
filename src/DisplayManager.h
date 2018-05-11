@@ -36,7 +36,7 @@
 class DisplayManager
 {
 public:
-    DisplayManager(ModeManager* const m, U8G2_SSD1306_128X32_UNIVISION_F_SW_I2C* const lib, HardwareSerial* const hws);
+    DisplayManager(ModeManager* const m, U8G2_SSD1306_128X32_UNIVISION_F_SW_I2C* const u8, HardwareSerial* const hws);
 
     /// Initializes the hardware
     void begin();
@@ -63,8 +63,8 @@ protected:
 private:
     ModeManager* mm;
 
-    U8G2_SSD1306_128X32_UNIVISION_F_SW_I2C* u8g2;
-    HardwareSerial* hs;
+    U8G2_SSD1306_128X32_UNIVISION_F_SW_I2C* u8g2 = NULL;
+    HardwareSerial* hs = NULL;
 };
 
 #endif

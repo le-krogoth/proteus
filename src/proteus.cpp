@@ -21,28 +21,11 @@
 
 #include "proteus.h"
 
-#include <U8g2lib.h>
-#include "DisplayManager.h"
-#include "EventHandler.h"
-#include "ModeManager.h"
-
-#include <ESP8266HTTPClient.h>
-#include <ESP8266httpUpdate.h>
-
-#include <ESP8266WiFi.h>
-#include <ESP8266WiFiMulti.h>
-
-#include <Esp.h> // deep sleep and system info
-
 // Todo decide on using multi or "standard" for update
 //ESP8266WiFiMulti WiFiMulti;
 
 U8G2_SSD1306_128X32_UNIVISION_F_SW_I2C u8g2(U8G2_R0, /* clock=*/ 5, /* data=*/ 4, /* reset=*/ 16);
 //U8G2_SSD1306_128X32_UNIVISION_F_SW_I2C u8g2(U8G2_R0, /* clock=*/ 14, /* data=*/ 2, /* reset=*/ 4);
-
-DisplayManager* dm = NULL;
-EventHandler* eh = NULL;
-ModeManager* mm = NULL;
 
 // ------------------------------------------------------------------
 // ------------------------------------------------------------------
@@ -51,7 +34,11 @@ void setup()
     // start serial port
     Serial.begin(115200);
     Serial.setDebugOutput(true);
-    delay(1000);
+    delay(10);
+
+    Serial.println("Proteus v2 booting up");
+
+    Serial.println("Setting config");
 
     WiFi.mode(WIFI_AP_STA);
     WiFi.setAutoConnect(false);
@@ -59,28 +46,50 @@ void setup()
     WiFi.softAPdisconnect(true);
     //WiFiMulti.addAP(SSID, PWD);
 
-    Serial.println("Proteus v2 booting up");
+    Serial.println("Checking filesystem");
+    if(SPIFFS.begin())
+    {
+        Serial.println("Mounting filesystem succeeded");
+    }
+    else
+    {
+        Serial.println("Mounting filesystem failed. Formatting...");
+
+        SPIFFS.format();
+    }
+
+    Serial.println("Loading config");
+
+    c = new Config(&Serial, false);
+    c->loadConfig();
+
+    Serial.println("Initialising objects");
 
     eh = new EventHandler(&Serial);
-    mm = new ModeManager(eh, &Serial);
+    mm = new ModeManager(eh, c, &u8g2, &Serial);
 
     dm = new DisplayManager(mm, &u8g2, &Serial);
     dm->begin();
-    //dm->showBootLogo();
+
+    if(c->getShowBootLogo())
+    {
+        dm->showBootLogo();
+    }
 
     pinMode(13, INPUT_PULLUP);
     pinMode(12, INPUT_PULLUP);
     //pinMode(1, INPUT_PULLUP);
 
-    SPIFFS.begin();
+    Serial.println("Let's go");
 
-    delay(1000);
+    delay(10);
 }
 
 // ------------------------------------------------------------------
 void loop()
 {
-    if(!dm->nextFrame())
+    // only enforce framerate if the module wants it enforced
+    if(mm->moduleWantsEnforcedFramerate() && !dm->nextFrame())
     {
         return;
     }
@@ -90,6 +99,7 @@ void loop()
     mm->checkEvents();
 
     dm->handleFrame();
+
 
     /*
 
@@ -119,45 +129,6 @@ void loop()
     //Serial.println("Proteus v2 trying to update");
     //update();
     //delay(200);
-}
-
-void update()
-{
-    // wait for WiFi connection
-    if((WiFi.status() == WL_CONNECTED)) {
-
-        Serial.println("Update SPIFFS...");
-        t_httpUpdate_return retS = ESPhttpUpdate.updateSpiffs("http://192.168.4.18/spiffs/file");
-        switch(retS) {
-            case HTTP_UPDATE_FAILED:
-                Serial.printf("HTTP_UPDATE_FAILED Error (%d): %s", ESPhttpUpdate.getLastError(), ESPhttpUpdate.getLastErrorString().c_str());
-                break;
-
-            case HTTP_UPDATE_NO_UPDATES:
-                Serial.println("HTTP_UPDATE_NO_UPDATES");
-                break;
-
-            case HTTP_UPDATE_OK:
-                Serial.println("HTTP_UPDATE_OK");
-                break;
-        }
-
-        Serial.println("Update sketch...");
-        t_httpUpdate_return retFW = ESPhttpUpdate.update("http://192.168.4.18:8081/fw/v2");
-        switch(retFW) {
-            case HTTP_UPDATE_FAILED:
-                Serial.printf("HTTP_UPDATE_FAILED Error (%d): %s", ESPhttpUpdate.getLastError(), ESPhttpUpdate.getLastErrorString().c_str());
-                break;
-
-            case HTTP_UPDATE_NO_UPDATES:
-                Serial.println("HTTP_UPDATE_NO_UPDATES");
-                break;
-
-            case HTTP_UPDATE_OK:
-                Serial.println("HTTP_UPDATE_OK");
-                break;
-        }
-    }
 }
 
 //EOF

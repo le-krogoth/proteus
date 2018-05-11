@@ -18,27 +18,46 @@
  ** along with this program. If not, see <http://www.gnu.org/licenses/>.
  **
  ** -----------------------------------------------------------------------------*/
-#ifndef mode_logo_h
-#define mode_logo_h
+#include "ModeTellTale.h"
 
-#include <U8g2lib.h>
-#include "../EventHandler.h"
-#include "BaseMode.h"
-#include "../grafx/logos.h"
-
-class ModeLogo : public BaseMode
+ModeTellTale::ModeTellTale(EventHandler *const e, U8G2_SSD1306_128X32_UNIVISION_F_SW_I2C* const u8, HardwareSerial *const hws) : BaseMode (e, u8, hws)
 {
-public:
-    ModeLogo(EventHandler* const e, U8G2_SSD1306_128X32_UNIVISION_F_SW_I2C* const u8, HardwareSerial* const hws);
+    u8g2->setFont(u8g2_font_6x10_tf);
+    u8g2->firstPage();
+    do {
 
-    void handleEvents();
-    //void paintFrame(U8G2_SSD1306_128X32_UNIVISION_F_SW_I2C* const u8g2);
-    void paintFrameInternal();
+        u8g2->drawUTF8(0, 16, "Listen to this...");
 
-protected:
+    } while ( u8g2->nextPage() );
 
-private:
+    out = new AudioOutputI2SNoDAC();
 
-};
+    out->begin();
+}
 
-#endif // mode_logo_h
+// let's not have pauses in the track, run as fast as possible
+bool ModeTellTale::getEnforceFramerate()
+{
+    return false;
+}
+
+void ModeTellTale::cleanup()
+{
+
+}
+
+void ModeTellTale::handleEvents()
+{
+    ESP8266SAM *sam = new ESP8266SAM;
+    sam->Say(out, "Can you hear me now?");
+    delay(500);
+    sam->Say(out, "I can't hear you!");
+    delete sam;
+}
+
+void ModeTellTale::paintFrameInternal()
+{
+    // do nothing
+}
+
+

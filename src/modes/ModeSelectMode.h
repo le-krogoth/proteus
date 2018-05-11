@@ -29,7 +29,7 @@
 class ModeSelectMode : public BaseMode
 {
 public:
-    ModeSelectMode(uint8_t currentMode, EventHandler* const e, HardwareSerial* const hws);
+    ModeSelectMode(uint8_t currentMode, EventHandler* const e, U8G2_SSD1306_128X32_UNIVISION_F_SW_I2C* const u8, HardwareSerial* const hws);
 
     void handleEvents();
     //void paintFrame(U8G2_SSD1306_128X32_UNIVISION_F_SW_I2C* const u8g2);
@@ -40,6 +40,7 @@ public:
     void loadApps();
     void loadApp(uint8_t id, const char* name);
 
+    // this is a bit of fake, this is the amount of standard modes, not including easter eggs...
     static const uint8_t M_MODE_COUNT   = 10;
 
     static const uint8_t M_MODE_DEFAULT = 0;
@@ -55,6 +56,9 @@ public:
     static const uint8_t M_AFTER_DARK   = 7;
     static const uint8_t M_WIFISCANNER  = 8;
     static const uint8_t M_GAME2        = 9;
+
+    static const uint8_t M_EASTEREGG_1  = 20;
+    static const uint8_t M_PLAY_TRACK   = 21;
 
 protected:
 

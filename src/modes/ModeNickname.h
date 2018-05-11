@@ -24,11 +24,12 @@
 #include <U8g2lib.h>
 #include "../EventHandler.h"
 #include "BaseMode.h"
+#include "../Config.h"
 
 class ModeNickname : public BaseMode
 {
 public:
-    ModeNickname(EventHandler* const e, HardwareSerial* const hws);
+    ModeNickname(EventHandler* const e, Config* const c, U8G2_SSD1306_128X32_UNIVISION_F_SW_I2C* const u8, HardwareSerial* const hws);
 
     void handleEvents();
     //void paintFrame(U8G2_SSD1306_128X32_UNIVISION_F_SW_I2C* const u8g2);
@@ -38,6 +39,9 @@ protected:
 
 private:
 
+    Config* conf = NULL;
+
+    String nickname = "";
 };
 
 #endif // mode_nickname_h

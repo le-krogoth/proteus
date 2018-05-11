@@ -21,8 +21,10 @@
 #include "ModeSetup.h"
 
 
-ModeSetup::ModeSetup(EventHandler *const e, HardwareSerial *const hws) : BaseMode (e, hws)
+ModeSetup::ModeSetup(EventHandler *const e, Config* const c, U8G2_SSD1306_128X32_UNIVISION_F_SW_I2C* const u8, HardwareSerial *const hws) : BaseMode (e, u8, hws)
 {
+    conf = c;
+
     //if(server)
     //{
     //    hs->println("Freeing old WWWSERVER");
@@ -53,6 +55,8 @@ ModeSetup::ModeSetup(EventHandler *const e, HardwareSerial *const hws) : BaseMod
     server->on("/api/hwinfo", HTTP_GET, std::bind(&ModeSetup::handleGetHWInfo, this));
 
     // files
+    // TODO: favicon
+    // server->on("/favicon.ico
     server->on("/index.html", HTTP_GET, std::bind(&ModeSetup::sendFromSPIFFS, this, "/www/index.html"));
     server->on("/siimple.css", HTTP_GET, std::bind(&ModeSetup::sendFromSPIFFS, this, "/www/siimple.css"));
     server->on("/siimple-colors.css", HTTP_GET, std::bind(&ModeSetup::sendFromSPIFFS, this, "/www/siimple-colors.css"));
@@ -65,27 +69,13 @@ ModeSetup::ModeSetup(EventHandler *const e, HardwareSerial *const hws) : BaseMod
 
     //server->serveStatic("/", SPIFFS, "/www/");
 
-    server->on("/heap", [&]() {
+    server->on("/heap", [&]()
+    {
+        server->sendHeader("Cache-Control", "no-cache");
         server->send(200, "text/plain", String(ESP.getFreeHeap()));
     });
 
     server->onNotFound(std::bind(&ModeSetup::handleNotFound, this));
-
-    //WWWSERVER.on("/heap", HTTP_GET, [](AsyncWebServerRequest *request){
-    //    request->send(200, "text/plain", String(ESP.getFreeHeap()));
-    //});
-
-    /*WWWSERVER.on("/iii", HTTP_GET, [](AsyncWebServerRequest *request){
-
-
-        File f = SPIFFS.open("/www/ttbl.json", "r");
-        f.readString()
-
-        request->send(SPIFFS, "/www/index.html");
-    });
-     */
-
-    //WWWSERVER.serveStatic("/", SPIFFS, "/www/");
 
     server->begin();
 }
@@ -166,13 +156,15 @@ void ModeSetup::handleNotFound()
         return;
     }
 
+    server->sendHeader("Cache-Control", "no-cache");
     server->send(200, "text/plain", "file not found");
 }
 
 void ModeSetup::handleGetConfig()
 {
-    String json = "{\n\"nickname\": \"Uberh4x0r\"\n}";
+    String json = conf->getConfigAsJSON();
 
+    server->sendHeader("Cache-Control", "no-cache");
     server->send(200, "application/json; charset=utf-8", json);
 }
 
@@ -183,12 +175,41 @@ void ModeSetup::handleSetConfig()
     DynamicJsonBuffer jsonBuffer(1000);
     JsonObject& root = jsonBuffer.parseObject(server->arg("plain"));
 
-    const char* nickname = root["nickname"];
-    //long time          = root["time"];
-    //double latitude    = root["data"][0];
+    if(!root.success())
+    {
+        hs->println("Parsing of json on SetConfig failed");
 
-    hs->println(nickname);
+        server->sendHeader("Cache-Control", "no-cache");
+        server->send(500, "application/json; charset=utf-8", "{success:false}");
 
+        return;
+    }
+
+    String nickname = root["nickname"].as<String>();
+    String softAPSSID = root["softAPSSID"].as<String>();
+    String softAPPSK = root["softAPPSK"].as<String>();
+
+    if(nickname)
+    {
+        conf->setNickname(nickname);
+    }
+
+    if(softAPSSID)
+    {
+        conf->setSoftAPSSID(softAPSSID);
+    }
+
+    if(softAPPSK)
+    {
+        conf->setSoftAPPSK(softAPPSK);
+    }
+
+    // TODO check that the correct content is written down
+    conf->storeConfig();
+
+    //hs->println(nickname);
+
+    server->sendHeader("Cache-Control", "no-cache");
     server->send(200, "application/json; charset=utf-8", "{success:true}");
 }
 
@@ -214,6 +235,7 @@ void ModeSetup::handleGetHWInfo() {
 
     //hs->println(json);
 
+    server->sendHeader("Cache-Control", "no-cache");
     server->send(200, "application/json; charset=utf-8", json);
 }
 
@@ -291,6 +313,8 @@ bool ModeSetup::sendFromSPIFFS(String path)
     return true;
 }
 
-void ModeSetup::returnOK() {
+void ModeSetup::returnOK()
+{
+    server->sendHeader("Cache-Control", "no-cache");
     server->send(200, "text/plain", "ok");
 }

@@ -21,7 +21,7 @@
 #include "ModeKnightRider.h"
 #include "grafx/gradient.h"
 
-ModeKnightRider::ModeKnightRider(EventHandler *const e, HardwareSerial *const hws) : BaseMode (e, hws)
+ModeKnightRider::ModeKnightRider(EventHandler *const e, U8G2_SSD1306_128X32_UNIVISION_F_SW_I2C* const u8, HardwareSerial *const hws) : BaseMode (e, u8, hws)
 {
 
 }
@@ -33,6 +33,9 @@ void ModeKnightRider::handleEvents()
 
 void ModeKnightRider::paintFrameInternal()
 {
+    // TODO try to not make it flicker
+    u8g2->setAutoPageClear(0);
+
     u8g2->firstPage();
     do {
 
@@ -46,6 +49,8 @@ void ModeKnightRider::paintFrameInternal()
         }
 
     } while ( u8g2->nextPage() );
+
+    u8g2->setAutoPageClear(1);
 
     if (scrollLeft)
     {

@@ -18,27 +18,38 @@
  ** along with this program. If not, see <http://www.gnu.org/licenses/>.
  **
  ** -----------------------------------------------------------------------------*/
-#ifndef mode_logo_h
-#define mode_logo_h
+#ifndef mode_playtrack_h
+#define mode_playtrack_h
 
 #include <U8g2lib.h>
 #include "../EventHandler.h"
 #include "BaseMode.h"
-#include "../grafx/logos.h"
 
-class ModeLogo : public BaseMode
+#include <AudioFileSourceSPIFFS.h>
+#include "AudioGeneratorMOD.h"
+#include "AudioOutputI2SNoDAC.h"
+#include "user_interface.h"
+
+class ModePlayTrack : public BaseMode
 {
 public:
-    ModeLogo(EventHandler* const e, U8G2_SSD1306_128X32_UNIVISION_F_SW_I2C* const u8, HardwareSerial* const hws);
+    ModePlayTrack(EventHandler* const e, U8G2_SSD1306_128X32_UNIVISION_F_SW_I2C* const u8, HardwareSerial* const hws);
 
-    void handleEvents();
+    void handleEvents() override;
     //void paintFrame(U8G2_SSD1306_128X32_UNIVISION_F_SW_I2C* const u8g2);
-    void paintFrameInternal();
+    void paintFrameInternal() override;
+
+    void cleanup() override;
+
+    bool getEnforceFramerate() override;
 
 protected:
 
 private:
+    AudioGeneratorMOD *mod;
+    AudioFileSourceSPIFFS *file;
+    AudioOutputI2SNoDAC *out;
 
 };
 
-#endif // mode_logo_h
+#endif // mode_playtrack_h

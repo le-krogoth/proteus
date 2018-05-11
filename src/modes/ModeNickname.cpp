@@ -20,9 +20,11 @@
  ** -----------------------------------------------------------------------------*/
 #include "ModeNickname.h"
 
-ModeNickname::ModeNickname(EventHandler *const e, HardwareSerial *const hws) : BaseMode (e, hws)
+ModeNickname::ModeNickname(EventHandler *const e, Config* const c, U8G2_SSD1306_128X32_UNIVISION_F_SW_I2C* const u8, HardwareSerial *const hws) : BaseMode (e, u8, hws)
 {
+    conf = c;
 
+    hs->println("before getting nick");
 }
 
 void ModeNickname::handleEvents()
@@ -32,11 +34,26 @@ void ModeNickname::handleEvents()
 
 void ModeNickname::paintFrameInternal()
 {
+    // only do this if not initialised yet
+    if(nickname.length() == 0)
+    {
+        nickname = conf->getNickname();
+
+        hs->println("after getting nick");
+
+        if (nickname.length() <= 4) {
+            u8g2->setFont(u8g2_font_logisoso32_tf);
+        } else if (nickname.length() <= 8) {
+            u8g2->setFont(u8g2_font_logisoso24_tf);
+        } else {
+            u8g2->setFont(u8g2_font_logisoso16_tf);
+        }
+    }
+
     u8g2->firstPage();
     do {
 
-        u8g2->setFont(u8g2_font_logisoso32_tf);
-        u8g2->drawUTF8(0,31,"Nickname");
+        u8g2->drawUTF8(0,31, nickname.c_str());
 
     } while ( u8g2->nextPage() );
 }

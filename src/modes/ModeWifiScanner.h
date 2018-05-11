@@ -32,7 +32,7 @@
 class ModeWifiScanner : public BaseMode
 {
 public:
-    ModeWifiScanner(EventHandler* const e, HardwareSerial* const hws);
+    ModeWifiScanner(EventHandler* const e, U8G2_SSD1306_128X32_UNIVISION_F_SW_I2C* const u8, HardwareSerial* const hws);
 
     void handleEvents();
     //void paintFrame(U8G2_SSD1306_128X32_UNIVISION_F_SW_I2C* const u8g2);

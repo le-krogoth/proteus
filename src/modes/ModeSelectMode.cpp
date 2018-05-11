@@ -20,10 +20,11 @@
  ** -----------------------------------------------------------------------------*/
 #include "ModeSelectMode.h"
 
-ModeSelectMode::ModeSelectMode(uint8_t currentMode, EventHandler *const e, HardwareSerial *const hws) : BaseMode (e, hws)
+ModeSelectMode::ModeSelectMode(uint8_t currentMode, EventHandler *const e, U8G2_SSD1306_128X32_UNIVISION_F_SW_I2C* const u8, HardwareSerial *const hws) : BaseMode (e, u8, hws)
 {
     selectedMode = currentMode;
 
+    // >= mode count is OK since we never will be able to select easter egg modes from this selection
     if(selectedMode >= M_MODE_COUNT)
     {
         selectedMode = 1;

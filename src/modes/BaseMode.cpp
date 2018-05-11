@@ -20,27 +20,16 @@
  ** -----------------------------------------------------------------------------*/
 #include "BaseMode.h"
 
-BaseMode::BaseMode(EventHandler* const e, HardwareSerial* const hws)
+BaseMode::BaseMode(EventHandler* const e, U8G2_SSD1306_128X32_UNIVISION_F_SW_I2C* const u8, HardwareSerial* const hws)
 {
     eh = e;
+    u8g2 = u8;
     hs = hws;
 }
 
 BaseMode::~BaseMode()
 {
     cleanup();
-}
-
-// TODO
-// better have that given in the constructor (via modemanager) than doing it
-// in every event. I think we can spare memory for that additional pointer...
-void BaseMode::lazySetU8g2(U8G2_SSD1306_128X32_UNIVISION_F_SW_I2C* const u8)
-{
-    // lazy setting
-    if(u8g2 == NULL)
-    {
-        u8g2 = u8;
-    }
 }
 
 void BaseMode::handleEvents()
@@ -53,10 +42,8 @@ void BaseMode::cleanup()
     // do nothing
 }
 
-void BaseMode::paintFrame(U8G2_SSD1306_128X32_UNIVISION_F_SW_I2C* const u8)
+void BaseMode::paintFrame()
 {
-    lazySetU8g2(u8);
-
     paintFrameInternal();
 }
 
@@ -98,6 +85,11 @@ void BaseMode::paintFrameInternal()
 
     // float d goes 1 step further on the sine evolution
     d = d + 0.10;
+}
+
+bool BaseMode::getEnforceFramerate()
+{
+    return true;
 }
 
 // Graphics

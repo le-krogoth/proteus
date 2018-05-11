@@ -36,12 +36,13 @@
 #include "BaseMode.h"
 
 #include "global.h"
+#include "../Config.h"
 
 
 class ModeSetup : public BaseMode
 {
 public:
-    ModeSetup(EventHandler* const e, HardwareSerial* const hws);
+    ModeSetup(EventHandler* const e, Config* const c, U8G2_SSD1306_128X32_UNIVISION_F_SW_I2C* const u8, HardwareSerial* const hws);
     ~ModeSetup();
 
     void handleEvents();
@@ -54,6 +55,7 @@ protected:
 private:
 
     ESP8266WebServer* server = new ESP8266WebServer(80);
+    Config* conf = NULL;
 
     String getMAC();
 

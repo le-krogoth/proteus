@@ -27,13 +27,14 @@
 class BaseMode
 {
 public:
-    BaseMode(EventHandler* const e, HardwareSerial* const hws);
+    BaseMode(EventHandler* const e, U8G2_SSD1306_128X32_UNIVISION_F_SW_I2C* const u8, HardwareSerial* const hws);
     ~BaseMode();
 
     virtual void handleEvents();
-    virtual void paintFrame(U8G2_SSD1306_128X32_UNIVISION_F_SW_I2C* const u8g2);
+    virtual void paintFrame();
     virtual void paintFrameInternal();
     virtual void cleanup();
+    virtual bool getEnforceFramerate();
 
     /// Clears display.
     void clear();
@@ -80,8 +81,6 @@ public:
     void drawChar(int16_t x, int16_t y, unsigned char c, uint8_t color, uint8_t bg, uint8_t size);
 
 protected:
-
-    void lazySetU8g2(U8G2_SSD1306_128X32_UNIVISION_F_SW_I2C* const u8g2);
 
     EventHandler* eh = NULL;
     HardwareSerial* hs = NULL;

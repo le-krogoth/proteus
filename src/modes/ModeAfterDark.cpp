@@ -21,7 +21,7 @@
 #include "ModeAfterDark.h"
 #include "grafx/toaster.h"
 
-ModeAfterDark::ModeAfterDark(EventHandler *const e, HardwareSerial *const hws) : BaseMode (e, hws)
+ModeAfterDark::ModeAfterDark(EventHandler *const e, U8G2_SSD1306_128X32_UNIVISION_F_SW_I2C* const u8, HardwareSerial *const hws) : BaseMode (e, u8, hws)
 {
     for(uint8_t i=0; i<4; i++) {  // Randomize initial flyer states
         flyer[i].x     = (-32 + random(160)) * 16;

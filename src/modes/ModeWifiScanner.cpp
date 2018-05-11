@@ -20,8 +20,16 @@
  ** -----------------------------------------------------------------------------*/
 #include "ModeWifiScanner.h"
 
-ModeWifiScanner::ModeWifiScanner(EventHandler *const e, HardwareSerial *const hws) : BaseMode (e, hws)
+ModeWifiScanner::ModeWifiScanner(EventHandler *const e, U8G2_SSD1306_128X32_UNIVISION_F_SW_I2C* const u8, HardwareSerial *const hws) : BaseMode (e, u8, hws)
 {
+    u8g2->setFont(u8g2_font_6x10_tf);
+    u8g2->firstPage();
+    do {
+
+        u8g2->drawUTF8(6, 16, "Loading Networks...");
+
+    } while ( u8g2->nextPage() );
+
     bool bLoaded = loadAPs();
 
     if(bLoaded)
@@ -47,6 +55,8 @@ bool ModeWifiScanner::loadAPs()
 
         sAP->add(*ap);
     }
+
+    return true;
 }
 
 void ModeWifiScanner::initCurrentAP()

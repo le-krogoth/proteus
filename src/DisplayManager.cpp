@@ -88,7 +88,7 @@ void DisplayManager::showBootLogo()
 void DisplayManager::setFrameRate(uint8_t rate)
 {
     frameRate = rate;
-    eachFrameMillis = 1000/rate;
+    eachFrameMillis = 1000 / rate;
 }
 
 bool DisplayManager::everyXFrames(uint8_t frames)
@@ -99,7 +99,7 @@ bool DisplayManager::everyXFrames(uint8_t frames)
 bool DisplayManager::nextFrame()
 {
     long now = millis();
-    uint8_t remaining;
+    //uint8_t remaining;
 
     // post render
     if (post_render) {
@@ -110,7 +110,7 @@ bool DisplayManager::nextFrame()
 
     // if it's not time for the next frame yet
     if (now < nextFrameStart) {
-        remaining = nextFrameStart - now;
+        // remaining = nextFrameStart - now;
         // if we have more than 1ms to spare, lets sleep
         // we should be woken up by timer0 every 1ms, so this should be ok
         //if (remaining > 1)
@@ -121,7 +121,7 @@ bool DisplayManager::nextFrame()
     // pre-render
 
     // technically next frame should be last frame + each frame but if we're
-    // running a slow render we would constnatly be behind the clock
+    // running a slow render we would constantly be behind the clock
     // keep an eye on this and see how it works.  If it works well the
     // lastFrameStart variable could be eliminated completely
     nextFrameStart = now + eachFrameMillis;
@@ -145,10 +145,6 @@ void DisplayManager::handleFrame()
 
 /*
 
-   // We could use font, but it's to small, so I made
-  // little bitmaps for each letter. Next to that, if
-  // we would use font, we need each letter to separated
-  // in an array.
   // Now let's put each letter on the sine wave
   // int c makes the letters move right to left
   // and sine calculation makes them go up an down
@@ -168,44 +164,3 @@ void DisplayManager::handleFrame()
 // end wobbling text
  * */
 
-/*
-void DisplayManager::setTextSize(uint8_t s)
-{
-    // textsize must always be 1 or higher
-    textsize = max(1,s);
-}
-
-void DisplayManager::setTextWrap(boolean w)
-{
-    wrap = w;
-}
-
-size_t DisplayManager::write(uint8_t c)
-{
-    if (c == '\n')
-    {
-        cursor_y += textsize*8;
-        cursor_x = 0;
-    }
-    else if (c == '\r')
-    {
-        // skip em
-    }
-    else
-    {
-        drawChar(cursor_x, cursor_y, c, 1, 0, textsize);
-        cursor_x += textsize*6;
-        if (wrap && (cursor_x > (WIDTH - textsize*6)))
-        {
-            // calling ourselves recursively for 'newline' is
-            // 12 bytes smaller than doing the same math here
-            write('\n');
-        }
-    }
-}
-
-void DisplayManager::display()
-{
-    this->paintScreen(sBuffer);
-}
- */

@@ -21,11 +21,10 @@
 
 #include "proteus.h"
 
-// Todo decide on using multi or "standard" for update
-//ESP8266WiFiMulti WiFiMulti;
-
 U8G2_SSD1306_128X32_UNIVISION_F_SW_I2C u8g2(U8G2_R0, /* clock=*/ 5, /* data=*/ 4, /* reset=*/ 16);
-//U8G2_SSD1306_128X32_UNIVISION_F_SW_I2C u8g2(U8G2_R0, /* clock=*/ 14, /* data=*/ 2, /* reset=*/ 4);
+// There are some Heltec 8 Boards, which need the config below.
+// We haven't found one yet, but we heard stories of.
+// U8G2_SSD1306_128X32_UNIVISION_F_SW_I2C u8g2(U8G2_R0, /* clock=*/ 14, /* data=*/ 2, /* reset=*/ 4);
 
 // ------------------------------------------------------------------
 // ------------------------------------------------------------------
@@ -36,15 +35,15 @@ void setup()
     Serial.setDebugOutput(true);
     delay(10);
 
-    Serial.println("Proteus v2 booting up");
+    Serial.println("Proteus booting up");
 
-    Serial.println("Setting config");
+    Serial.println("Setting standard Wifi Configuration");
 
+    // We deactivate the WIFI to save battery power
     WiFi.mode(WIFI_AP_STA);
     WiFi.setAutoConnect(false);
     WiFi.disconnect(true);
     WiFi.softAPdisconnect(true);
-    //WiFiMulti.addAP(SSID, PWD);
 
     Serial.println("Checking filesystem");
     if(SPIFFS.begin())
@@ -71,16 +70,17 @@ void setup()
     dm = new DisplayManager(mm, &u8g2, &Serial);
     dm->begin();
 
+    // only show boot logo if not deactivated by the user
     if(c->getShowBootLogo())
     {
         dm->showBootLogo();
     }
 
+    // activate buttons
     pinMode(13, INPUT_PULLUP);
     pinMode(12, INPUT_PULLUP);
-    //pinMode(1, INPUT_PULLUP);
 
-    Serial.println("Let's go");
+    Serial.println("Let's go. Welcome to Proteus.");
 
     delay(10);
 }
@@ -88,6 +88,8 @@ void setup()
 // ------------------------------------------------------------------
 void loop()
 {
+    Serial.println(ESP.getFreeHeap());
+
     // only enforce framerate if the module wants it enforced
     if(mm->moduleWantsEnforcedFramerate() && !dm->nextFrame())
     {
@@ -99,36 +101,6 @@ void loop()
     mm->checkEvents();
 
     dm->handleFrame();
-
-
-    /*
-
-    uint16_t buttons1 = ((~PIN_IN) & (bit(1) | bit(12) | bit(13)));
-
-    Serial.println(PIN_IN);
-    Serial.println(buttons1);
-
-    //uint16_t buttons2 = ((PIN_IN) & (bit(12) | bit(13)));
-
-    //Serial.print("-");
-    //Serial.println(buttons2);
-
-    Serial.print("left: ");
-    Serial.print((buttons1 & bit(13)) == bit(13));
-
-    Serial.print(" right: ");
-    Serial.print((buttons1 & bit(12)) == bit(12));
-
-    Serial.print(" prog: ");
-    Serial.print((buttons1 & bit(1)) == bit(1));
-
-    Serial.print(" both: ");
-    Serial.println((buttons1 & (bit(12) | bit(13))) == (bit(12) | bit(13)));
-    */
-
-    //Serial.println("Proteus v2 trying to update");
-    //update();
-    //delay(200);
 }
 
 //EOF

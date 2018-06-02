@@ -23,8 +23,11 @@
 
 #include <Arduino.h>
 #include <FS.h>
+#include <ESP8266WiFi.h>
 #include <ArduinoJson.h>
 #include <modes/ModeSelectMode.h>
+
+#include "user_interface.h"
 
 class Config
 {
@@ -52,6 +55,11 @@ public:
     String getSoftAPPSK();
     void setSoftAPPSK(String psk);
 
+    String getUpdateSSID();
+    void setUpdateSSID(String ssid);
+    String getUpdatePSK();
+    void setUpdatePSK(String psk);
+
     String getUpdateServer();
 
     uint8_t getCurrentMode();
@@ -65,15 +73,20 @@ protected:
 private:
 
     // writes default config, chooses sensible values for SoftAP SSID, PSK and such.
+    String getMAC();
+
     bool writeDefaultConfig();
 
     HardwareSerial* hs;
     bool bReadOnly = true;
     bool bShowBootLogo = true;
 
-    String softAPSSID = "";
-    String softAPPSK = "";
+    String softAPSSID = "auto";
+    String softAPPSK = "auto";
     String nickname = "31337 h4x0r";
+
+    String updateSSID = "proteus";
+    String updatePSK = "proteus.1234";
     String updateServer = "http://192.168.4.18/";
 
     uint8_t selectedMode = ModeSelectMode::M_MODE_DEFAULT;

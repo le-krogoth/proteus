@@ -22,7 +22,11 @@
 
 ModeTimeTable::ModeTimeTable(EventHandler *const e, U8G2_SSD1306_128X32_UNIVISION_F_SW_I2C* const u8, HardwareSerial *const hws) : BaseMode (e, u8, hws)
 {
+    hs->println("Loading talks");
+
     bool bLoaded = loadTimeTable();
+
+    hs->println("Talks loaded");
 
     if(bLoaded)
     {
@@ -44,7 +48,7 @@ void ModeTimeTable::initCurrentTalk()
     titleWidth = 0;
     speakerWidth = 0;
 
-    //hs->println("End of initcurrenttalk");
+    hs->println("End of initcurrenttalk");
 }
 
 void ModeTimeTable::handleEvents()
@@ -110,18 +114,18 @@ void ModeTimeTable::paintFrameInternal()
             u8g2->drawUTF8(0, 8, "<");
         }
 
-        u8g2->drawUTF8(10, 8, "Room: ");
-        u8g2->drawUTF8(50, 8, talk.room.c_str());
-        u8g2->drawUTF8(75, 8, talk.date.c_str());
+        u8g2->drawUTF8(8, 8, "Room: ");
+        u8g2->drawUTF8(40, 8, talk.room.c_str());
+        u8g2->drawUTF8(55, 8, talk.date.c_str());
 
         if(currentTalk < sTalks->size() -1)
         {
             u8g2->drawUTF8(116, 8, ">");
         }
 
-        u8g2->drawUTF8(20, 16, talk.start.c_str());
-        u8g2->drawUTF8(50, 16, "-");
-        u8g2->drawUTF8(85, 16, talk.end.c_str());
+        u8g2->drawUTF8(6, 16, talk.start.c_str());
+        u8g2->drawUTF8(46, 16, "-");
+        u8g2->drawUTF8(53, 16, talk.end.c_str());
 
         u8g2->drawUTF8(titleOffset, 24, talk.title.c_str());
 
@@ -181,34 +185,36 @@ bool ModeTimeTable::loadTimeTable()
     File f = SPIFFS.open("/www/ttbl.json", "r");
     if (!f)
     {
-        //hs->println("file open failed in modetimetable");
+        hs->println("file open failed in modetimetable");
         return false;
     }
     else
     {
-        //hs->println("file opened");
+        hs->println("file opened");
 
         // Allocate the memory pool on the stack.
-        DynamicJsonBuffer jsonBuffer(1500);
+        DynamicJsonBuffer jsonBuffer(3000);
         JsonObject &root = jsonBuffer.parseObject(f);
 
         f.close();
 
         if (!root.success())
         {
-            //hs->println(F("Failed to parse file"));
+            hs->println(F("Failed to parse file"));
             return false;
         }
         else
         {
-            //hs->println(F("File parsed"));
+            hs->println(F("File parsed"));
 
             JsonArray& talks =  root["talks"];
             for (auto& talk : talks) {
 
-                //hs->println(F("before Talk t = {}"));
+                hs->println(F("before Talk t = {}"));
 
                 Talk* t = new Talk();
+
+                hs->println(talk["title"].as<String>());
 
                 t->title = talk["title"].as<String>();
                 t->speaker = talk["speaker"].as<String>();
@@ -223,7 +229,7 @@ bool ModeTimeTable::loadTimeTable()
                 //Serial.println(String(title));
                 sTalks->add(*t);
 
-                //hs->println(F("added to list"));
+                hs->println(F("added to list"));
             }
         }
     }

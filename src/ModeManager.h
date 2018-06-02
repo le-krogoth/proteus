@@ -34,7 +34,9 @@
 #include "modes/ModeAfterDark.h"
 #include "modes/ModeWifiScanner.h"
 #include "modes/ModePlayTrack.h"
-
+#include "modes/ModeTellTale.h"
+#include "modes/ModeOTA.h"
+#include "modes/ModeSnake.h"
 
 class ModeManager
 {

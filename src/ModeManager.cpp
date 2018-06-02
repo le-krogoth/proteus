@@ -49,47 +49,52 @@ void ModeManager::checkEvents()
 {
     //hs->println("checkEvents");
 
-    // check for easter eggs first
-    std::string sKeyStream = eh->getKeyStream();
-    if(sKeyStream == "LRLRLLRR")
-    {
-        // make sure to not just trigger again
-        eh->clearKeyStream();
+    // only allow cheat codes in specific modes
+    if(currentMode == ModeSelectMode::M_LOGO || currentMode == ModeSelectMode::M_NICKNAME) {
 
-        uint8_t oldMode = currentMode;
-        currentMode = ModeSelectMode::M_EASTEREGG_1;
-        setMode(currentMode, oldMode);
-        return;
-    }
-    else if(sKeyStream == "RLRLRRLL")
-    {
-        // make sure to not just trigger again
-        eh->clearKeyStream();
+        // check for easter eggs first
+        std::string sKeyStream = eh->getKeyStream();
+        if (sKeyStream == "LRLRLLRR") {
+            // make sure to not just trigger again
+            eh->clearKeyStream();
 
-        uint8_t oldMode = currentMode;
-        currentMode = ModeSelectMode::M_EASTEREGG_1;
-        setMode(currentMode, oldMode);
-        return;
-    }
-    else if(sKeyStream == "RLRRLRLL")
-    {
-        // make sure to not just trigger again
-        eh->clearKeyStream();
+            uint8_t oldMode = currentMode;
+            currentMode = ModeSelectMode::M_EASTEREGG_1;
+            setMode(currentMode, oldMode);
+            return;
+        } else if (sKeyStream == "RLRLRRLL") {
+            // make sure to not just trigger again
+            eh->clearKeyStream();
 
-        uint8_t oldMode = currentMode;
-        currentMode = ModeSelectMode::M_PLAY_TRACK;
-        setMode(currentMode, oldMode);
-        return;
-    }
-    else if(sKeyStream == "LRBLRBLR")
-    {
-        // make sure to not just trigger again
-        eh->clearKeyStream();
+            uint8_t oldMode = currentMode;
+            currentMode = ModeSelectMode::M_EASTEREGG_1;
+            setMode(currentMode, oldMode);
+            return;
+        } else if (sKeyStream == "RLRRLRLL") {
+            // make sure to not just trigger again
+            eh->clearKeyStream();
 
-        uint8_t oldMode = currentMode;
-        currentMode = ModeSelectMode::M_EASTEREGG_1;
-        setMode(currentMode, oldMode);
-        return;
+            uint8_t oldMode = currentMode;
+            currentMode = ModeSelectMode::M_PLAY_TRACK;
+            setMode(currentMode, oldMode);
+            return;
+        } else if (sKeyStream == "LRLLRLLR") {
+            // make sure to not just trigger again
+            eh->clearKeyStream();
+
+            uint8_t oldMode = currentMode;
+            currentMode = ModeSelectMode::M_TELL_TALE;
+            setMode(currentMode, oldMode);
+            return;
+        } else if (sKeyStream == "LLLLLLLR") {
+            // make sure to not just trigger again
+            eh->clearKeyStream();
+
+            uint8_t oldMode = currentMode;
+            currentMode = ModeSelectMode::M_OTA;
+            setMode(currentMode, oldMode);
+            return;
+        }
     }
 
     if(eh->isPrgJustPressed())
@@ -101,7 +106,7 @@ void ModeManager::checkEvents()
         if(currentMode == ModeSelectMode::M_SELECT_MODE)
         {
             ModeSelectMode* m = (ModeSelectMode*)getCurrentModeObject();
-            hs->print("********************** ");
+
             hs->print("Selected Mode is: ");
             hs->println(m->getSelectedMode());
 
@@ -115,8 +120,6 @@ void ModeManager::checkEvents()
             setMode(currentMode, oldMode);
         }
     }
-
-
 }
 
 uint8_t ModeManager::getCurrentMode()
@@ -191,14 +194,20 @@ void ModeManager::setMode(uint8_t newMode, uint8_t oldMode, bool storeMode)
         case ModeSelectMode::M_WIFISCANNER:
             currentModeObject = new ModeWifiScanner(eh, u8g2, hs);
             break;
-        case ModeSelectMode::M_GAME2:
-            currentModeObject = new BaseMode(eh, u8g2, hs);
+        case ModeSelectMode::M_SNAKE:
+            currentModeObject = new ModeSnake(eh, u8g2, hs);
             break;
         case ModeSelectMode::M_EASTEREGG_1:
             currentModeObject = new ModeUnicorn(eh, u8g2, hs);
             break;
         case ModeSelectMode::M_PLAY_TRACK:
             currentModeObject = new ModePlayTrack(eh, u8g2, hs);
+            break;
+        case ModeSelectMode::M_TELL_TALE:
+            currentModeObject = new ModeTellTale(eh, u8g2, hs);
+            break;
+        case ModeSelectMode::M_OTA:
+            currentModeObject = new ModeOTA(eh, conf, u8g2, hs);
             break;
         default:
             currentModeObject = new BaseMode(eh, u8g2, hs);

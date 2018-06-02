@@ -35,15 +35,8 @@
 #include <ESP8266httpUpdate.h>
 
 #include <ESP8266WiFi.h>
-#include <ESP8266WiFiMulti.h>
 
 #include <Esp.h> // deep sleep and system info
-
-// change these to your setup
-//static const char* SSID  = "proteus";
-//static const char* PWD   = "abcd.1234";
-
-//static const char* SERVER_URL = "http://192.168.1.15:80/";
 
 void update();
 

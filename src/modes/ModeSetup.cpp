@@ -31,13 +31,12 @@ ModeSetup::ModeSetup(EventHandler *const e, Config* const c, U8G2_SSD1306_128X32
     //    delete server;
     //}
 
-    AP_SSID = ("area41_" + getMAC()).c_str();
-    AP_PWD = "abcd1234";
+
 
     WiFi.disconnect(true);
     WiFi.softAPdisconnect(true);
 //    bool bStarted = WiFi.softAP(AP_SSID.c_str(), AP_PWD.c_str());
-    bool bStarted = WiFi.softAP(AP_SSID.c_str(), "");
+    bool bStarted = WiFi.softAP(conf->getSoftAPSSID().c_str(), "");
     WiFi.setSleepMode(WIFI_NONE_SLEEP);
 
     hs->print("SoftAP started: ");
@@ -108,9 +107,9 @@ void ModeSetup::paintFrameInternal()
     do {
 
         //u8g2->drawUTF8(0,10,"SSID: ");
-        u8g2->drawUTF8(0,10, AP_SSID.c_str());
+        u8g2->drawUTF8(0,10, conf->getSoftAPSSID().c_str());
         //8g2->drawUTF8(0,20,"PSK: ");
-        u8g2->drawUTF8(0,20, AP_PWD.c_str());
+        u8g2->drawUTF8(0,20, conf->getSoftAPPSK().c_str());
         u8g2->drawUTF8(96,20, "#");
         u8g2->drawUTF8(102,20, String(WiFi.softAPgetStationNum()).c_str());
         //u8g2->drawUTF8(0,30,"URL: ");
@@ -118,23 +117,6 @@ void ModeSetup::paintFrameInternal()
         u8g2->drawUTF8(42,30, WiFi.softAPIP().toString().c_str());
 
     } while ( u8g2->nextPage() );
-}
-
-String ModeSetup::getMAC()
-{
-    uint8_t mac[6];
-
-    WiFi.macAddress(mac);
-
-    char result[14];
-
-    snprintf( result, sizeof( result ), "%02x%02x%02x%02x%02x%02x", mac[ 0 ], mac[ 1 ], mac[ 2 ], mac[ 3 ], mac[ 4
-    ], mac[ 5 ] );
-
-    hs->print("MAC: ");
-    hs->println(result);
-
-    return String( result );
 }
 
 void ModeSetup::handleNotFound()

@@ -23,6 +23,8 @@
 ModeOTA::ModeOTA(EventHandler *const e, Config* const c, U8G2_SSD1306_128X32_UNIVISION_F_SW_I2C* const u8, HardwareSerial *const hws) : BaseMode (e, u8, hws)
 {
     conf = c;
+
+    WiFi.begin(conf->getUpdateSSID().c_str(), conf->getUpdatePSK().c_str());
 }
 
 void ModeOTA::handleEvents()
@@ -50,6 +52,13 @@ void ModeOTA::paintFrameInternal()
         u8g2->drawUTF8(0,31,"ModeOTA");
 
     } while ( u8g2->nextPage() );
+}
+
+void ModeOTA::cleanup()
+{
+    hs->println("disconnecting Wifi and stopping update");
+    WiFi.disconnect(true);
+
 }
 
 
@@ -99,5 +108,4 @@ void ModeOTA::update()
         }
     }
 }
-
 

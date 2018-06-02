@@ -49,6 +49,7 @@ void BaseMode::paintFrame()
 
 void BaseMode::paintFrameInternal()
 {
+    // standard helix
     u8g2->firstPage();
     do {
 
@@ -108,7 +109,7 @@ void BaseMode::drawPixel(int x, int y, uint8_t color)
 {
     uint8_t row = y / 8;
     uint8_t bit_position = y % 8;
-    return (sBuffer[(row*WIDTH) + x] & _BV(bit_position)) >> bit_position;
+    return (sBuffer[(row*SCREEN_WIDTH) + x] & _BV(bit_position)) >> bit_position;
 }*/
 
 void BaseMode::drawCircle(int16_t x0, int16_t y0, uint8_t r, uint8_t color)

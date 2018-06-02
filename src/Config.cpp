@@ -63,15 +63,28 @@ bool Config::loadConfig()
             hs->println(F("Config file parsed, reading it now"));
 
             softAPSSID = root["softAPSSID"].as<String>();
+            if(softAPSSID == "auto")
+            {
+                softAPSSID = ("area41_" + getMAC()).c_str();;
+            }
             softAPPSK = root["softAPPSK"].as<String>();
+            if(softAPPSK == "auto")
+            {
+                // TODO: generate somewhat strong password
+                softAPPSK = "abcd1234";
+            }
+
             nickname = root["nickname"].as<String>();
             selectedMode = root["currentMode"];
             bShowBootLogo = root["showBootLogo"];
+            updateSSID = root["updateSSID"].as<String>();
+            updatePSK = root["updatePSK"].as<String>();
             updateServer = root["updateServer"].as<String>();
 
+            /*
             hs->print(F("Show boot logo: "));
             hs->println(bShowBootLogo);
-
+             */
         }
 
         f.close();
@@ -84,19 +97,14 @@ String Config::getConfigAsJSON()
 {
     String json = "";
 
-    // "nickname": "31337 h4x0r",
-    //  "softAPSSID": "auto",
-    //  "softAPPSK": "auto",
-    //  "currentMode": 1,
-    //  "updateServer": "http://192.168.4.18/",
-    //  "showBootLogo": true
-
     // TODO, clean it up
     json += "{";
     json += "\"nickname\": \"" + nickname + "\",";
-    json += "\"SoftAPSSID\": \"" + softAPSSID+ "\",";
-    json += "\"SoftAPPSK\": \"" + softAPPSK + "\",";
+    json += "\"softAPSSID\": \"" + softAPSSID+ "\",";
+    json += "\"softAPPSK\": \"" + softAPPSK + "\",";
     json += "\"currentMode\": " + String(selectedMode) + ",";
+    json += "\"updateSSID\": \"" + updateSSID+ "\",";
+    json += "\"updatePSK\": \"" + updatePSK + "\",";
     json += "\"updateServer\": \"" + updateServer + "\",";
 //    json += "\"showBootLogo\": \"" + bShowBootLogo?"true":"false" + "\"";
     json += "\"showBootLogo\": false";
@@ -106,7 +114,7 @@ String Config::getConfigAsJSON()
 }
 
 
-// TODO: clear question -> only write config down when this function is called. no auto store?
+// TODO: answer question -> only write config down when this function is called. no auto store?
 bool Config::storeConfig()
 {
     if(bReadOnly)
@@ -171,6 +179,26 @@ void Config::setSoftAPPSK(String psk)
     softAPPSK = psk;
 }
 
+String Config::getUpdateSSID()
+{
+    return updateSSID;
+}
+
+void Config::setUpdateSSID(String ssid)
+{
+    updateSSID = ssid;
+}
+
+String Config::getUpdatePSK()
+{
+    return updatePSK;
+}
+
+void Config::setUpdatePSK(String psk)
+{
+    updatePSK = psk;
+}
+
 String Config::getUpdateServer()
 {
     return updateServer;
@@ -186,10 +214,25 @@ bool Config::setCurrentMode(uint8_t mode)
     selectedMode = mode;
 }
 
-// TODO
-// writes default config, chooses sensible values for SoftAP SSID, PSK and such.
 bool Config::writeDefaultConfig()
 {
     storeConfig();
+}
+
+String Config::getMAC()
+{
+    uint8_t mac[6];
+
+    WiFi.macAddress(mac);
+
+    char result[14];
+
+    snprintf( result, sizeof( result ), "%02x%02x%02x%02x%02x%02x", mac[ 0 ], mac[ 1 ], mac[ 2 ], mac[ 3 ], mac[ 4
+    ], mac[ 5 ] );
+
+    //hs->print("MAC: ");
+    //hs->println(result);
+
+    return String( result );
 }
 

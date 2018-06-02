@@ -23,9 +23,6 @@
 
 #include <U8g2lib.h>
 
-//#include "ESPAsyncTCP.h"
-//#include "ESPAsyncWebServer.h"
-
 #include <Arduino.h>
 #include <ArduinoJson.h>
 
@@ -56,11 +53,6 @@ private:
 
     ESP8266WebServer* server = new ESP8266WebServer(80);
     Config* conf = NULL;
-
-    String getMAC();
-
-    String AP_SSID = "";
-    String AP_PWD = "";
 
     // Configuration Handler
     void handleGetConfig();

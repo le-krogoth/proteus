@@ -55,10 +55,13 @@ public:
     static const uint8_t M_UNICORN_GAME = 6;
     static const uint8_t M_AFTER_DARK   = 7;
     static const uint8_t M_WIFISCANNER  = 8;
-    static const uint8_t M_GAME2        = 9;
+    static const uint8_t M_SNAKE        = 9;
+    // WARNING, if you add a Module, add +1 on the M_MODE_COUNT
 
     static const uint8_t M_EASTEREGG_1  = 20;
     static const uint8_t M_PLAY_TRACK   = 21;
+    static const uint8_t M_TELL_TALE    = 22;
+    static const uint8_t M_OTA          = 23;
 
 protected:
 
@@ -76,9 +79,8 @@ private:
             "Unicorn",
             "After Dark",
             "Wifi Scanner",
-            "Spiral"
+            "Snake (on a badge)"
     };
-
 };
 
 #endif

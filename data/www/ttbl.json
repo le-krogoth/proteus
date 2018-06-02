@@ -1,9 +1,36 @@
 {
   "talks": [
-      {"title":"Opening Ceremony", "speaker": "Area41 Team", "room": "P", "date":"F", "start":"09:15", "end":"09:30"},
-      {"title":"Keynote", "speaker": "Costin Raiu (@craiu)", "room": "P", "date":"F", "start":"09:30", "end":"10:00"},
-      {"title":"Coffee Break", "speaker": "Area41 Team", "room": "P", "date":"F", "start":"10:00", "end":"10:30"},
-      {"title":"Monitoring macOS for malware and intrusions", "speaker": "Daniel Roethlisberger (@droethlisberger)", "room": "1", "date":"F", "start":"10:30", "end":"11:20"},
-      {"title":"Chrome & WebRTC -eq Problems", "speaker": "Amit Dori (@_AmitDori_)", "room": "2", "date":"F", "start":"10:30", "end":"11:20"}
-    ]
+      {"title":"Opening Ceremony", "speaker": "Area41 Team", "room": "P", "date":"Friday", "start":"09:15", "end":"09:30"},
+      {"title":"Keynote", "speaker": "Costin Raiu", "room": "P", "date":"Friday", "start":"09:30", "end":"10:00"},
+      {"title":"Coffee Break", "speaker": "Area41 Team", "room": "P", "date":"Friday", "start":"10:00", "end":"10:30"},
+      {"title":"Monitoring macOS for malware and intrusions", "speaker": "Daniel Roethlisberger", "room": "1", "date":"F", "start":"10:30", "end":"11:20"},
+      {"title":"Chrome & WebRTC -eq Problems", "speaker": "Amit Dori", "room": "2", "date":"Friday", "start":"10:30", "end":"11:20"},
+      {"title":"From DDoS to Mining", "speaker": "David Liebenberg", "room": "1", "date":"Friday", "start":"11:30", "end":"12:20"},
+      {"title":"Looking into the White Box", "speaker": "Pascal Junod", "room": "2", "date":"Friday", "start":"11:30", "end":"12:20"},
+      {"title":"Lunch", "speaker": "Area41 Team", "room": "P", "date":"Friday", "start":"12:20", "end":"14:00"},
+      {"title":"The story of Greendale", "speaker": "Thomas Chopitea", "room": "1", "date":"Friday", "start":"14:00", "end":"14:50"},
+      {"title":"Blame the badge", "speaker": "Carel van Rooyen, Philipp Promeuschel", "room": "2", "date":"Friday", "start":"14:00", "end":"14:50"},
+      {"title":"Red Team: Stories from the Trenches", "speaker": "Stefan Friedli, Michael Schneider", "room": "1", "date":"Friday", "start":"15:00", "end":"15:50"},
+      {"title":"Replacing Reality", "speaker": "David Wollmann", "room": "2", "date":"Friday", "start":"15:00", "end":"15:50"},
+      {"title":"Coffee Break", "speaker": "Area41 Team", "room": "P", "date":"Friday", "start":"15:50", "end":"16:30"},
+      {"title":"Smart != Secure", "speaker": "Elliot Ward, Jake Humphries", "room": "1", "date":"Friday", "start":"16:30", "end":"17:20"},
+      {"title":"Dockless Bike Sharing Services", "speaker": "Antoine Neuenschwander", "room": "2", "date":"Friday", "start":"16:30", "end":"17:20"},
+      {"title":"Recovering from years of security debt", "speaker": "Amanda Berlin", "room": "1", "date":"Friday", "start":"17:30", "end":"18:20"},
+      {"title":"Modern pentest tricks", "speaker": "Thomas Debize", "room": "2", "date":"Friday", "start":"17:30", "end":"18:20"},
+      {"title":"BBQ", "speaker": "Enjoy a nice complementary BBQ", "room": "P", "date":"Friday", "start":"18:15", "end":"21:00"},
+      {"title":"Door Opening", "speaker": "Area41 Team", "room": "P", "date":"Saturday", "start":"08:00", "end":"09:00"},
+      {"title":"Defense-in-depth techniques", "speaker": "Michele Spagnuolo, Lukas Weichselbaum", "room": "1", "date":"Saturday", "start":"09:00", "end":"09:50"},
+    {"title":"Anatomy of attacks", "speaker": "Seongsu Park", "room": "2", "date":"Saturday", "start":"09:00", "end":"09:50"},
+    {"title":"Coffee Break", "speaker": "Area41 Team", "room": "P", "date":"Saturday", "start":"09:50", "end":"10:30"},
+    {"title":"Practical Threat Modelling", "speaker": "Sergey Gordeychik, Alexander Timorin, Denis Kolegov", "room": "1", "date":"Saturday", "start":"10:30", "end":"11:20"},
+    {"title":"Lazy ways to own networks", "speaker": "Nicolas Heiniger", "room": "2", "date":"Saturday", "start":"10:30", "end":"11:20"},
+    {"title":"Swimming IoT or how to hack a vessel", "speaker": "Stephan Gerling", "room": "1", "date":"Saturday", "start":"11:30", "end":"12:20"},
+    {"title":"Complete Anatomy of File less botnets", "speaker": "Himanshu Anand", "room": "2", "date":"Saturday", "start":"11:30", "end":"12:20"},
+    {"title":"Lunch", "speaker": "Area41 Team", "room": "P", "date":"Saturday", "start":"12:20", "end":"14:00"},
+    {"title":"Web Cryptominers in the .CH Zone", "speaker": "Antoine Neuenschwander", "room": "1", "date":"Friday", "start":"14:00", "end":"14:50"},
+    {"title":"TBA", "speaker": "-", "room": "2", "date":"Saturday", "start":"14:00", "end":"14:50"},
+    {"title":"Fuzzing for Worms", "speaker": "Dobin Rutishauser", "room": "1", "date":"Saturday", "start":"15:00", "end":"15:50"},
+    {"title":"The day you got hacked", "speaker": "Pascal Gloor", "room": "2", "date":"Saturday", "start":"15:00", "end":"15:50"},
+    {"title":"Closing ceremony ", "speaker": "Area41 Team", "room": "P", "date":"Saturday", "start":"16:00", "end":"16:30"}
+  ]
 }

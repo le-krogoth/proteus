@@ -22,11 +22,14 @@
 
 ModeWifiScanner::ModeWifiScanner(EventHandler *const e, U8G2_SSD1306_128X32_UNIVISION_F_SW_I2C* const u8, HardwareSerial *const hws) : BaseMode (e, u8, hws)
 {
+    sAP = new SimpleList<AP>;
+
     u8g2->setFont(u8g2_font_6x10_tf);
     u8g2->firstPage();
     do {
 
-        u8g2->drawUTF8(6, 16, "Loading Networks...");
+        u8g2->drawUTF8(6, 13, "Loading.");
+        u8g2->drawUTF8(6, 24, "Patience, Padawan.");
 
     } while ( u8g2->nextPage() );
 
@@ -38,23 +41,34 @@ ModeWifiScanner::ModeWifiScanner(EventHandler *const e, U8G2_SSD1306_128X32_UNIV
     }
 }
 
+void ModeWifiScanner::cleanup()
+{
+    hs->println("cleaning up, giving back memory");
+    sAP->clear();
+
+    // crash
+    delete(sAP);
+    // delete sAP;
+}
+
+
 bool ModeWifiScanner::loadAPs()
 {
-    //WiFi.disconnect();
-
     int n = WiFi.scanNetworks();
 
     for (int i = 0; i < n; ++i)
     {
         AP* ap = new AP();
 
-        ap->ssid = WiFi.SSID(i);
+        ap->ssid = WiFi.SSID(i).c_str();
         ap->rssi = WiFi.RSSI(i);
         ap->encryptionType = WiFi.encryptionType(i);
         ap->channel = WiFi.channel(i);
 
         sAP->add(*ap);
     }
+
+    WiFi.disconnect();
 
     return true;
 }
@@ -108,7 +122,7 @@ void ModeWifiScanner::paintFrameInternal()
         {
             AP ap = sAP->get(i);
 
-            u8g2->drawUTF8(6, ((i - viewPos) * 8) + 8, ap.ssid.substring(0, 15).c_str());
+            u8g2->drawUTF8(6, ((i - viewPos) * 8) + 8, ap.ssid.substr(0, 15).c_str());
             u8g2->drawUTF8(110, ((i - viewPos) * 8) + 8, getEncStr(ap.encryptionType).c_str());
 
             if(i == selectedAP)

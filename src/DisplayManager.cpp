@@ -127,6 +127,7 @@ bool DisplayManager::nextFrame()
     nextFrameStart = now + eachFrameMillis;
     lastFrameStart = now;
     post_render = true;
+
     return post_render;
 }
 
@@ -142,25 +143,3 @@ void DisplayManager::handleFrame()
     //hs->println("paint frame");
     m->paintFrame();
 }
-
-/*
-
-  // Now let's put each letter on the sine wave
-  // int c makes the letters move right to left
-  // and sine calculation makes them go up an down
-  arduboy.drawBitmap(c, 32 - sin(d + (0 * 0.4)) * 5, LetterH, 8, 8, 1);
-  arduboy.drawBitmap(c + 10, 32 - sin(d + (1 * 0.4)) * 5, LetterE, 8, 8, 1);
-  arduboy.drawBitmap(c + 20, 32 - sin(d + (2 * 0.4)) * 5, LetterL, 8, 8, 1);
-  arduboy.drawBitmap(c + 30, 32 - sin(d + (3 * 0.4)) * 5, LetterL, 8, 8, 1);
-  arduboy.drawBitmap(c + 40, 32 - sin(d + (4 * 0.4)) * 5, LetterO, 8, 8, 1);
-  arduboy.drawBitmap(c + 50, 32 - sin(d + (5 * 0.4)) * 5, Letter, 8, 8, 1);
-  arduboy.drawBitmap(c + 60, 32 - sin(d + (6 * 0.4)) * 5, LetterA, 8, 8, 1);
-  arduboy.drawBitmap(c + 70, 32 - sin(d + (7 * 0.4)) * 5, LetterR, 8, 8, 1);
-  arduboy.drawBitmap(c + 80, 32 - sin(d + (8 * 0.4)) * 5, LetterD, 8, 8, 1);
-  arduboy.drawBitmap(c + 90, 32 - sin(d + (9 * 0.4)) * 5, LetterU, 8, 8, 1);
-  arduboy.drawBitmap(c + 100, 32 - sin(d + (10 * 0.4)) * 5, LetterB, 8, 8, 1);
-  arduboy.drawBitmap(c + 110, 32 - sin(d + (11 * 0.4)) * 5, LetterO, 8, 8, 1);
-  arduboy.drawBitmap(c + 120, 32 - sin(d + (12 * 0.4)) * 5, LetterY, 8, 8, 1);
-// end wobbling text
- * */
-

@@ -37,6 +37,9 @@ void setup()
 
     Serial.println("Proteus booting up");
 
+    //randomSeed(analogRead(0));
+    ESP.eraseConfig();
+
     Serial.println("Setting standard Wifi Configuration");
 
     // We deactivate the WIFI to save battery power
@@ -44,6 +47,11 @@ void setup()
     WiFi.setAutoConnect(false);
     WiFi.disconnect(true);
     WiFi.softAPdisconnect(true);
+
+    // activate buttons
+    Serial.println("Activating buttons");
+    pinMode(13, INPUT_PULLUP);
+    pinMode(12, INPUT_PULLUP);
 
     Serial.println("Checking filesystem");
     if(SPIFFS.begin())
@@ -64,9 +72,14 @@ void setup()
 
     Serial.println("Initialising objects");
 
+    // initialising event handler, making sure to poll for the first time to allow to reset during boot
     eh = new EventHandler(&Serial);
+    eh->poll();
+
+    // initialise the mode manager and implicitly the first mode to be run
     mm = new ModeManager(eh, c, &u8g2, &Serial);
 
+    // initialise the display
     dm = new DisplayManager(mm, &u8g2, &Serial);
     dm->begin();
 
@@ -76,10 +89,6 @@ void setup()
         dm->showBootLogo();
     }
 
-    // activate buttons
-    pinMode(13, INPUT_PULLUP);
-    pinMode(12, INPUT_PULLUP);
-
     Serial.println("Let's go. Welcome to Proteus.");
 
     delay(10);
@@ -88,13 +97,13 @@ void setup()
 // ------------------------------------------------------------------
 void loop()
 {
-    Serial.println(ESP.getFreeHeap());
-
     // only enforce framerate if the module wants it enforced
     if(mm->moduleWantsEnforcedFramerate() && !dm->nextFrame())
     {
         return;
     }
+
+    Serial.println(ESP.getFreeHeap());
 
     eh->poll();
 

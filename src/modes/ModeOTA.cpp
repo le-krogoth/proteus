@@ -24,6 +24,15 @@ ModeOTA::ModeOTA(EventHandler *const e, Config* const c, U8G2_SSD1306_128X32_UNI
 {
     conf = c;
 
+    u8g2->setFont(u8g2_font_6x10_tf);
+    u8g2->firstPage();
+    do {
+
+        u8g2->drawUTF8(6, 13, "Blue pill or");
+        u8g2->drawUTF8(6, 24, "Red pill?");
+
+    } while ( u8g2->nextPage() );
+
     WiFi.begin(conf->getUpdateSSID().c_str(), conf->getUpdatePSK().c_str());
 }
 
@@ -41,6 +50,8 @@ void ModeOTA::paintFrameInternal()
     u8g2->firstPage();
     do {
 
+        switch(state)
+        {}
         // TODO
         // Do you want to update?
         //
@@ -58,7 +69,6 @@ void ModeOTA::cleanup()
 {
     hs->println("disconnecting Wifi and stopping update");
     WiFi.disconnect(true);
-
 }
 
 

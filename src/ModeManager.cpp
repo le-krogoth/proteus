@@ -27,8 +27,23 @@ ModeManager::ModeManager(EventHandler* const e, Config* const c, U8G2_SSD1306_12
     conf = c;
     u8g2 = u8;
 
-    // init the mode to the last one from the config
-    setMode(c->getCurrentMode(), ModeSelectMode::M_MODE_DEFAULT, false);
+    // check if user presses both buttons during boot
+    // if so, start in ModeSelectMode::M_MODE_DEFAULT
+    // if not, init the mode to the last one from the config
+    if(eh->isLeftAndRightPressed())
+    {
+        hs->println("reset into mode default");
+        setMode(ModeSelectMode::M_MODE_DEFAULT, ModeSelectMode::M_MODE_DEFAULT, false);
+    }
+    else if(eh->isPrgPressed())
+    {
+        setMode(ModeSelectMode::M_ABOUT, ModeSelectMode::M_MODE_DEFAULT, false);
+    }
+    else
+    {
+        hs->println("booting into last selected mode");
+        setMode(c->getCurrentMode(), ModeSelectMode::M_MODE_DEFAULT, false);
+    }
 }
 
 bool ModeManager::moduleWantsEnforcedFramerate()
@@ -112,6 +127,18 @@ void ModeManager::checkEvents()
 
             currentMode = m->getSelectedMode();
             setMode(currentMode, 0);
+        }
+        else if(currentMode == ModeSelectMode::M_TIMETABLE || currentMode == ModeSelectMode::M_WIFISCANNER)
+        {
+            // there is a memory leak somewhere in the linked list
+            // time ran out and the leak was still there
+            // so we added this hack to not have any show stoppers.
+            conf->setCurrentMode(ModeSelectMode::M_SELECT_MODE);
+            conf->storeConfig();
+
+            // reset the environment
+            ESP.reset();
+            delay(500);
         }
         else
         {
@@ -208,6 +235,9 @@ void ModeManager::setMode(uint8_t newMode, uint8_t oldMode, bool storeMode)
             break;
         case ModeSelectMode::M_OTA:
             currentModeObject = new ModeOTA(eh, conf, u8g2, hs);
+            break;
+        case ModeSelectMode::M_ABOUT:
+            currentModeObject = new ModeAbout(eh, u8g2, hs);
             break;
         default:
             currentModeObject = new BaseMode(eh, u8g2, hs);

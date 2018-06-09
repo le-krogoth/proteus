@@ -37,6 +37,7 @@
 #include "modes/ModeTellTale.h"
 #include "modes/ModeOTA.h"
 #include "modes/ModeSnake.h"
+#include "modes/ModeAbout.h"
 
 class ModeManager
 {

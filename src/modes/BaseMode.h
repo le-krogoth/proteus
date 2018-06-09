@@ -28,7 +28,7 @@ class BaseMode
 {
 public:
     BaseMode(EventHandler* const e, U8G2_SSD1306_128X32_UNIVISION_F_SW_I2C* const u8, HardwareSerial* const hws);
-    ~BaseMode();
+    virtual ~BaseMode();
 
     virtual void handleEvents();
     virtual void paintFrame();

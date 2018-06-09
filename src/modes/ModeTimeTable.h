@@ -42,16 +42,21 @@ public:
 
 protected:
 
+    void cleanup() override;
+
 private:
     uint8_t currentTalk = 0;
     //LinkedList<Talk*> lTalks = LinkedList<Talk*>();
-    SimpleList<Talk>* sTalks = new SimpleList<Talk>;
+    SimpleList<Talk>* sTalks;
 
     int16_t titleOffset = 0;
     int16_t speakerOffset = 0;
 
     bool titleScrollLeft = true;
     bool speakerScrollLeft = true;
+
+    bool isDirty = true;
+    bool doesScroll = false;
 
     uint16_t titleWidth = 0;
     uint16_t speakerWidth = 0;

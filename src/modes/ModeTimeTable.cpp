@@ -22,7 +22,18 @@
 
 ModeTimeTable::ModeTimeTable(EventHandler *const e, U8G2_SSD1306_128X32_UNIVISION_F_SW_I2C* const u8, HardwareSerial *const hws) : BaseMode (e, u8, hws)
 {
+    sTalks = new SimpleList<Talk>;
+
     hs->println("Loading talks");
+
+    u8g2->setFont(u8g2_font_6x10_tf);
+    u8g2->firstPage();
+    do {
+
+        u8g2->drawUTF8(6, 13, "Patience you");
+        u8g2->drawUTF8(6, 24, "must have");
+
+    } while ( u8g2->nextPage() );
 
     bool bLoaded = loadTimeTable();
 
@@ -32,6 +43,15 @@ ModeTimeTable::ModeTimeTable(EventHandler *const e, U8G2_SSD1306_128X32_UNIVISIO
     {
         initCurrentTalk();
     }
+}
+
+void ModeTimeTable::cleanup()
+{
+    hs->println("cleaning up, giving back memory");
+    sTalks->clear();
+
+    // crash
+    delete(sTalks);
 }
 
 void ModeTimeTable::initCurrentTalk()
@@ -47,6 +67,9 @@ void ModeTimeTable::initCurrentTalk()
 
     titleWidth = 0;
     speakerWidth = 0;
+
+    isDirty = true;
+    doesScroll = false;
 
     hs->println("End of initcurrenttalk");
 }
@@ -81,22 +104,32 @@ void ModeTimeTable::handleEvents()
 
 void ModeTimeTable::paintFrameInternal()
 {
+    if(!isDirty && !doesScroll)
+    {
+        //hs->println("no screen update");
+        return;
+    }
+
+    hs->print("Talk no: ");
     Talk talk = sTalks->get(currentTalk);
+    hs->println(currentTalk);
 
     u8g2->setFont(u8g2_font_6x10_tf);
 
-    // lazy load since u8g2 is only set after the first round...
+    hs->print("Current talk: ");
+    hs->print(talk.title.c_str());
+    hs->print(talk.title.length());
+    hs->print(", ");
+    hs->println(talk.speaker.c_str());
+
     if(titleWidth == 0)
     {
         titleWidth = talk.title.length() * 6;
-        //titleWidth = u8g2->getUTF8Width(talk.title.c_str());
     }
 
-    // lazy load since u8g2 is only set after the first round...
     if(speakerWidth == 0)
     {
         speakerWidth = talk.speaker.length() * 6;
-        //speakerWidth = u8g2->getUTF8Width(talk.speaker.c_str());
     }
 
     // now do the drawing...
@@ -114,9 +147,9 @@ void ModeTimeTable::paintFrameInternal()
             u8g2->drawUTF8(0, 8, "<");
         }
 
-        u8g2->drawUTF8(8, 8, "Room: ");
-        u8g2->drawUTF8(40, 8, talk.room.c_str());
-        u8g2->drawUTF8(55, 8, talk.date.c_str());
+        u8g2->drawUTF8(10, 8, "Room: ");
+        u8g2->drawUTF8(45, 8, talk.room.c_str());
+        u8g2->drawUTF8(65, 8, talk.date.c_str());
 
         if(currentTalk < sTalks->size() -1)
         {
@@ -136,6 +169,8 @@ void ModeTimeTable::paintFrameInternal()
     // do only scroll if wider than display
     if(titleWidth > 128)
     {
+        doesScroll = true;
+
         if (titleScrollLeft)
         {
             titleOffset -= 2;
@@ -158,6 +193,8 @@ void ModeTimeTable::paintFrameInternal()
 
     if(speakerWidth > 128)
     {
+        doesScroll = true;
+
         if(speakerScrollLeft)
         {
             speakerOffset -= 2;
@@ -177,6 +214,8 @@ void ModeTimeTable::paintFrameInternal()
             speakerScrollLeft = true;
         }
     }
+
+    isDirty = false;
 }
 
 bool ModeTimeTable::loadTimeTable()
@@ -190,7 +229,7 @@ bool ModeTimeTable::loadTimeTable()
     }
     else
     {
-        hs->println("file opened");
+        //hs->println("file opened");
 
         // Allocate the memory pool on the stack.
         DynamicJsonBuffer jsonBuffer(3000);
@@ -200,28 +239,28 @@ bool ModeTimeTable::loadTimeTable()
 
         if (!root.success())
         {
-            hs->println(F("Failed to parse file"));
+            //hs->println(F("Failed to parse file"));
             return false;
         }
         else
         {
-            hs->println(F("File parsed"));
+            //hs->println(F("File parsed"));
 
             JsonArray& talks =  root["talks"];
             for (auto& talk : talks) {
 
-                hs->println(F("before Talk t = {}"));
+                //hs->println(F("before Talk t = {}"));
 
                 Talk* t = new Talk();
 
-                hs->println(talk["title"].as<String>());
+                //hs->println(talk["title"].as<String>());
 
-                t->title = talk["title"].as<String>();
-                t->speaker = talk["speaker"].as<String>();
-                t->room = talk["room"].as<String>();
-                t->date = talk["date"].as<String>();
-                t->start = talk["start"].as<String>();
-                t->end = talk["end"].as<String>();
+                t->title = talk["title"].asString();
+                t->speaker = talk["speaker"].asString();
+                t->room = talk["room"].asString();
+                t->date = talk["date"].asString();
+                t->start = talk["start"].asString();
+                t->end = talk["end"].asString();
 
                 //hs->println(F("after, before adding to list"));
                 //Serial.print(speaker);
@@ -229,7 +268,7 @@ bool ModeTimeTable::loadTimeTable()
                 //Serial.println(String(title));
                 sTalks->add(*t);
 
-                hs->println(F("added to list"));
+                //hs->println(F("added to list"));
             }
         }
     }

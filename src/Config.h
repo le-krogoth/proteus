@@ -48,7 +48,7 @@ public:
     bool getShowBootLogo();
 
     String getNickname();
-    bool setNickname(String n);
+    void setNickname(String n);
 
     String getSoftAPSSID();
     void setSoftAPSSID(String ssid);
@@ -63,7 +63,7 @@ public:
     String getUpdateServer();
 
     uint8_t getCurrentMode();
-    bool setCurrentMode(uint8_t mode);
+    void setCurrentMode(uint8_t mode);
 
     const String configFile = "/config.json";
 
@@ -75,7 +75,7 @@ private:
     // writes default config, chooses sensible values for SoftAP SSID, PSK and such.
     String getMAC();
 
-    bool writeDefaultConfig();
+    void writeDefaultConfig();
 
     HardwareSerial* hs;
     bool bReadOnly = true;
@@ -90,6 +90,8 @@ private:
     String updateServer = "http://192.168.4.18/";
 
     uint8_t selectedMode = ModeSelectMode::M_MODE_DEFAULT;
+
+    String generatePassword();
 };
 
 #endif

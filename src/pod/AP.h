@@ -26,7 +26,7 @@
 class AP
 {
 public:
-    String ssid;
+    std::string ssid;
     int32_t rssi;
     int32_t channel;
     uint8_t encryptionType = 0;

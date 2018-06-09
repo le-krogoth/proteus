@@ -25,18 +25,20 @@ ModeSetup::ModeSetup(EventHandler *const e, Config* const c, U8G2_SSD1306_128X32
 {
     conf = c;
 
-    //if(server)
-    //{
-    //    hs->println("Freeing old WWWSERVER");
-    //    delete server;
-    //}
+    u8g2->setFont(u8g2_font_6x10_tf);
+    u8g2->firstPage();
+    do {
 
+        // thanks, A.A. Milne
+        u8g2->drawUTF8(6, 13, "Rivers know this:");
+        u8g2->drawUTF8(6, 24, "there is no hurry.");
+
+    } while ( u8g2->nextPage() );
 
 
     WiFi.disconnect(true);
     WiFi.softAPdisconnect(true);
-//    bool bStarted = WiFi.softAP(AP_SSID.c_str(), AP_PWD.c_str());
-    bool bStarted = WiFi.softAP(conf->getSoftAPSSID().c_str(), "");
+    bool bStarted = WiFi.softAP(conf->getSoftAPSSID().c_str(), conf->getSoftAPPSK().c_str());
     WiFi.setSleepMode(WIFI_NONE_SLEEP);
 
     hs->print("SoftAP started: ");
@@ -79,18 +81,11 @@ ModeSetup::ModeSetup(EventHandler *const e, Config* const c, U8G2_SSD1306_128X32
     server->begin();
 }
 
-ModeSetup::~ModeSetup()
-{
-    hs->println("destructor called");
-    cleanup();
-}
-
 void ModeSetup::cleanup()
 {
     hs->println("disconnecting Wifi Soft AP and shutting down Server");
     WiFi.softAPdisconnect(true);
     server->stop();
-    //WWWserver->reset();
 }
 
 void ModeSetup::handleEvents()

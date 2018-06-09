@@ -112,7 +112,7 @@ void ModeSnake::updateUnits()
 
 void ModeSnake::checkCollision()
 {
-    if (x < 0 | x > SCREEN_WIDTH - UNIT_SIZE | y > SCREEN_HEIGHT - UNIT_SIZE | y < 0)
+    if ((x < 0) | (x > SCREEN_WIDTH - UNIT_SIZE) | (y > SCREEN_HEIGHT - UNIT_SIZE) | (y < 0))
     {
         hs->println("Left playfield");
 
@@ -170,13 +170,13 @@ void ModeSnake::addUnit()
     {
         unitCount = MAX_UNITS;
     }
-    else if(unitCount == 3)
+    else if(unitCount == 6)
     {
         currentSpeed = medDelay;
     }
-    else if(unitCount == 6)
+    else if(unitCount == 12)
     {
-        currentSpeed == fastDelay;
+        currentSpeed = fastDelay;
     }
 
     hs->println("Unit added");
@@ -268,6 +268,7 @@ void ModeSnake::resetSnake()
     hs->println("Snake reset");
 
     unitCount = 0;
+    score = 0;
 
     x = START_X;
     y = START_Y;
@@ -297,9 +298,9 @@ bool ModeSnake::collidePointRect(uint8_t x1, uint8_t y1 ,uint8_t x2 ,uint8_t y2,
 
 bool ModeSnake::collideRectRect(uint8_t x1, uint8_t y1, uint8_t w1, uint8_t h1, uint8_t x2, uint8_t y2, uint8_t w2, uint8_t h2)
 {
-    return !( x2     >=  x1 + w1  ||
-              x2 + w2  <=  x1     ||
-              y2     >=  y1 + h1  ||
-              y2 + h2  <=  y1     );
+    return !( x2 >= x1 + w1 ||
+              x2 + w2 <= x1 ||
+              y2 >= y1 + h1 ||
+              y2 + h2 <= y1 );
 }
 

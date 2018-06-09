@@ -62,6 +62,7 @@ public:
     static const uint8_t M_PLAY_TRACK   = 21;
     static const uint8_t M_TELL_TALE    = 22;
     static const uint8_t M_OTA          = 23;
+    static const uint8_t M_ABOUT        = 24;
 
 protected:
 
@@ -72,7 +73,7 @@ private:
     const char* DISPLAY_MODES[M_MODE_COUNT] = {
             "Select Mode",
             "Configure your badge",
-            "Knight Rider",
+            "Cyclope",
             "Show Nickname",
             "Show Logo",
             "Timetable",

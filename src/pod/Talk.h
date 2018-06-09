@@ -26,13 +26,12 @@
 class Talk
 {
 public:
-    String title;
-    String speaker;
-    String room;
-    String date;
-    String start;
-    String end;
+    std::string title;
+    std::string speaker;
+    std::string room;
+    std::string date;
+    std::string start;
+    std::string end;
 };
-
 
 #endif //PROTEUS_TALK_H

@@ -34,7 +34,7 @@ void ModeKnightRider::handleEvents()
 void ModeKnightRider::paintFrameInternal()
 {
     // TODO try to not make it flicker
-    u8g2->setAutoPageClear(0);
+    // u8g2->setAutoPageClear(0);
 
     u8g2->firstPage();
     do {
@@ -50,7 +50,7 @@ void ModeKnightRider::paintFrameInternal()
 
     } while ( u8g2->nextPage() );
 
-    u8g2->setAutoPageClear(1);
+    //u8g2->setAutoPageClear(1);
 
     if (scrollLeft)
     {
@@ -61,12 +61,12 @@ void ModeKnightRider::paintFrameInternal()
         offset += 8;
     }
 
-    if (offset >= 100)
+    if (offset >= 130)
     {
         scrollLeft = true;
     }
 
-    if (offset <= -80)
+    if (offset <= -100)
     {
         scrollLeft = false;
     }

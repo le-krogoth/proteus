@@ -19,6 +19,7 @@
  **
  ** -----------------------------------------------------------------------------*/
 #include "ModeUnicorn.h"
+#include "grafx/unicorn.h"
 
 ModeUnicorn::ModeUnicorn(EventHandler *const e, U8G2_SSD1306_128X32_UNIVISION_F_SW_I2C* const u8, HardwareSerial *const hws) : BaseMode (e, u8, hws)
 {
@@ -27,7 +28,21 @@ ModeUnicorn::ModeUnicorn(EventHandler *const e, U8G2_SSD1306_128X32_UNIVISION_F_
 
 void ModeUnicorn::handleEvents()
 {
-
+    if(!gameover)
+    {
+        if(eh->isRightJustPressed())
+        {
+            // jump
+        }
+    }
+    else
+    {
+        // any button restarts the game when the game is over
+        if(eh->isRightJustPressed() || eh->isLeftJustPressed())
+        {
+            gameover = false;
+        }
+    }
 }
 
 void ModeUnicorn::paintFrameInternal()
@@ -49,32 +64,29 @@ void ModeUnicorn::paintFrameInternal()
     u8g2->firstPage();
     do {
 
-//u8g2.setFont(u8g2_font_logisoso32_tf);
-//u8g2->setFont(u8g2_font_m2icon_7_tf);
-//u8g2.drawUTF8(0,31,"Proteus");
-//u8g2.drawXBM( 1, 2, 125,32, area41logo);
-
-
-
-        u8g2->drawXBMP(10, 10, 22, 21, unicorn_1_bits);
-
-        switch(currentSprite)
+        // check if not gameover. if gameover show "game over" until next click
+        if(gameover)
         {
-            case 0:
-                u8g2->drawXBMP(50, 10, 22, 21, afUnicorn[currentSprite]);
-                break;
-            case 2:
-                u8g2->drawXBMP(50, 6, 22, 21, afUnicorn[currentSprite]);
-                break;
-            default:
-                u8g2->drawXBMP(50, 10, 26, 20, afUnicorn[currentSprite]);
-                break;
+            u8g2->setFont(u8g2_font_logisoso16_tf);
+            u8g2->drawUTF8(20,20,"GAME OVER");
+        }
+        else
+        {
+            switch (currentSprite) {
+                case 0:
+                    u8g2->drawXBMP(50, 10, 22, 21, arrUnicorn[currentSprite]);
+                    break;
+                case 2:
+                    u8g2->drawXBMP(50, 6, 22, 21, arrUnicorn[currentSprite]);
+                    break;
+                default:
+                    u8g2->drawXBMP(50, 10, 26, 20, arrUnicorn[currentSprite]);
+                    break;
+            }
         }
 
-    u8g2->drawXBMP(90, 0, 32, 32, toaster_0_bits);
-
-//arduboy.drawBitmap(unicorn.pos.x, unicorn.pos.y - 15, animationFramesUnicornMask[unicorn.frame], 16, 16, BLACK);
-//arduboy.drawBitmap(unicorn.pos.x, unicorn.pos.y - 15, animationFramesUnicorn[unicorn.frame], 16, 16, WHITE);
+        //arduboy.drawBitmap(unicorn.pos.x, unicorn.pos.y - 15, animationFramesUnicornMask[unicorn.frame], 16, 16, BLACK);
+        //arduboy.drawBitmap(unicorn.pos.x, unicorn.pos.y - 15, animationFramesUnicorn[unicorn.frame], 16, 16, WHITE);
 
     } while ( u8g2->nextPage() );
 }

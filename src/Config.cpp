@@ -70,8 +70,9 @@ bool Config::loadConfig()
             softAPPSK = root["softAPPSK"].as<String>();
             if(softAPPSK == "auto")
             {
-                // TODO: generate somewhat strong password
-                softAPPSK = "abcd1234";
+                hs->println("generating password");
+                // generate a somewhat strong password
+                softAPPSK = generatePassword();
             }
 
             nickname = root["nickname"].as<String>();
@@ -91,6 +92,21 @@ bool Config::loadConfig()
     }
 
     return true;
+}
+
+String Config::generatePassword()
+{
+    std::string keyspace = "0aAbB1cCdD1eEf2F2gG3hHiIjJk3K45lLmM9n5N6o4OpPqQ76rRsStT78uUvVwW98xXyY0zZ";
+    std::string pwd = "";
+
+    for(int i=0; i < 12; i++)
+    {
+        pwd += keyspace.at(random(0,72));
+    }
+
+    hs->print("New password: ");
+    hs->println(pwd.c_str());
+    return String(pwd.c_str());
 }
 
 String Config::getConfigAsJSON()
@@ -154,7 +170,7 @@ String Config::getNickname()
     return nickname;
 }
 
-bool Config::setNickname(String n)
+void Config::setNickname(String n)
 {
     nickname = n;
 }
@@ -209,12 +225,12 @@ uint8_t Config::getCurrentMode()
     return selectedMode;
 }
 
-bool Config::setCurrentMode(uint8_t mode)
+void Config::setCurrentMode(uint8_t mode)
 {
     selectedMode = mode;
 }
 
-bool Config::writeDefaultConfig()
+void Config::writeDefaultConfig()
 {
     storeConfig();
 }

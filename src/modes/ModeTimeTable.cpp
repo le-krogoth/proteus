@@ -141,28 +141,28 @@ void ModeTimeTable::paintFrameInternal()
         hs->print(" Total count: ");
         hs->println(sTalks.size());
          */
-
         if(currentTalk > 0)
         {
             u8g2->drawUTF8(0, 8, "<");
         }
 
-        u8g2->drawUTF8(10, 8, "Room: ");
-        u8g2->drawUTF8(45, 8, talk.room.c_str());
-        u8g2->drawUTF8(65, 8, talk.date.c_str());
+        u8g2->drawUTF8(48, 8, talk.date.c_str());
 
         if(currentTalk < sTalks->size() -1)
         {
-            u8g2->drawUTF8(116, 8, ">");
+            u8g2->drawUTF8(122, 8, ">");
         }
 
-        u8g2->drawUTF8(6, 16, talk.start.c_str());
-        u8g2->drawUTF8(46, 16, "-");
-        u8g2->drawUTF8(53, 16, talk.end.c_str());
+        u8g2->drawUTF8(titleOffset, 16, talk.title.c_str());
 
-        u8g2->drawUTF8(titleOffset, 24, talk.title.c_str());
+        u8g2->drawUTF8(speakerOffset, 24, talk.speaker.c_str());
 
-        u8g2->drawUTF8(speakerOffset, 32, talk.speaker.c_str());
+        u8g2->drawUTF8(0, 32, talk.start.c_str());
+        u8g2->drawUTF8(30, 32, "-");
+        u8g2->drawUTF8(36, 32, talk.end.c_str());
+
+        u8g2->drawUTF8(86, 32, "Room: ");
+        u8g2->drawUTF8(122, 32, talk.room.c_str());
 
     } while ( u8g2->nextPage() );
 
@@ -255,12 +255,12 @@ bool ModeTimeTable::loadTimeTable()
 
                 //hs->println(talk["title"].as<String>());
 
-                t->title = talk["title"].asString();
-                t->speaker = talk["speaker"].asString();
-                t->room = talk["room"].asString();
-                t->date = talk["date"].asString();
-                t->start = talk["start"].asString();
-                t->end = talk["end"].asString();
+                t->title = talk["title"].as<char*>();
+                t->speaker = talk["speaker"].as<char*>();
+                t->room = talk["room"].as<char*>();
+                t->date = talk["date"].as<char*>();
+                t->start = talk["start"].as<char*>();
+                t->end = talk["end"].as<char*>();
 
                 //hs->println(F("after, before adding to list"));
                 //Serial.print(speaker);
@@ -271,6 +271,8 @@ bool ModeTimeTable::loadTimeTable()
                 //hs->println(F("added to list"));
             }
         }
+
+        jsonBuffer.clear();
     }
 
     return true;

@@ -69,6 +69,8 @@ public:
 
 protected:
 
+    static const uint8_t pwdLength = 10;
+
 
 private:
 

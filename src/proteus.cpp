@@ -103,7 +103,15 @@ void loop()
         return;
     }
 
-    Serial.println(ESP.getFreeHeap());
+    // for debugging purposes, print when heap changes
+    uint32 freeHeap = ESP.getFreeHeap();
+    if(freeHeap != lastFreeHeap)
+    {
+        Serial.print("Free Heap: ");
+        Serial.println(freeHeap);
+
+        lastFreeHeap = freeHeap;
+    }
 
     eh->poll();
 

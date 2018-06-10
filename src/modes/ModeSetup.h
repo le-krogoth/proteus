@@ -40,7 +40,6 @@ class ModeSetup : public BaseMode
 {
 public:
     ModeSetup(EventHandler* const e, Config* const c, U8G2_SSD1306_128X32_UNIVISION_F_SW_I2C* const u8, HardwareSerial* const hws);
-    ~ModeSetup();
 
     void handleEvents();
     //void paintFrame(U8G2_SSD1306_128X32_UNIVISION_F_SW_I2C* const u8g2);

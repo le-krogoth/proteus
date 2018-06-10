@@ -26,6 +26,8 @@
 class Talk
 {
 public:
+    //~Talk();
+
     std::string title;
     std::string speaker;
     std::string room;

@@ -54,18 +54,10 @@ void DisplayManager::showBootLogo()
 
         u8g2->firstPage();
         do {
-            //u8g2.setFont(u8g2_font_logisoso32_tf);
-            //u8g2->setFont(u8g2_font_m2icon_7_tf);
-            //u8g2.drawUTF8(0,31,"Proteus");
-            //u8g2.drawXBM( 1, 2, 125,32, area41logo);
             u8g2->drawXBMP(1, y, 125, 32, area41logo);
 
-            //u8g2->drawXBMP(50, 20, 16, 16, spriteUnicorn_1);
-
-            //arduboy.drawBitmap(unicorn.pos.x, unicorn.pos.y - 15, animationFramesUnicornMask[unicorn.frame], 16, 16, BLACK);
-            //arduboy.drawBitmap(unicorn.pos.x, unicorn.pos.y - 15, animationFramesUnicorn[unicorn.frame], 16, 16, WHITE);
-
-            if(y >= 3) {
+            if(y >= 3)
+            {
                 u8g2->setFont(u8g2_font_micro_tr);
                 u8g2->drawUTF8(48, 6, "welcome to");
             }
@@ -75,7 +67,8 @@ void DisplayManager::showBootLogo()
         delay(10);
         // longer delay post boot, we put it inside the loop to
         // save the flash calling clear/delay again outside the loop
-        if (y==-30) {
+        if (y==-30)
+        {
             delay(250);
         }
     }

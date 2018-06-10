@@ -45,4 +45,6 @@ EventHandler* eh = NULL;
 ModeManager* mm = NULL;
 Config* c = NULL;
 
+uint32 lastFreeHeap = 0;
+
 #endif //PROTEUS_PROTEUS_H

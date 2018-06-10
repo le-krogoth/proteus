@@ -99,7 +99,7 @@ String Config::generatePassword()
     std::string keyspace = "0aAbB1cCdD1eEf2F2gG3hHiIjJk3K45lLmM9n5N6o4OpPqQ76rRsStT78uUvVwW98xXyY0zZ";
     std::string pwd = "";
 
-    for(int i=0; i < 12; i++)
+    for(int i=0; i < pwdLength; i++)
     {
         pwd += keyspace.at(random(0,72));
     }
@@ -122,8 +122,8 @@ String Config::getConfigAsJSON()
     json += "\"updateSSID\": \"" + updateSSID+ "\",";
     json += "\"updatePSK\": \"" + updatePSK + "\",";
     json += "\"updateServer\": \"" + updateServer + "\",";
-//    json += "\"showBootLogo\": \"" + bShowBootLogo?"true":"false" + "\"";
-    json += "\"showBootLogo\": false";
+    json += "\"showBootLogo\": \"" + (bShowBootLogo ? String("true") : String("false")) + "\"";
+    //json += "\"showBootLogo\": true";
     json += "}";
 
     return json;

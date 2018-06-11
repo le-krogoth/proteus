@@ -161,6 +161,9 @@ BaseMode* ModeManager::getCurrentModeObject()
 
 void ModeManager::setMode(uint8_t newMode, uint8_t oldMode, bool storeMode)
 {
+    // mode changes, reset easter egg buffer
+    eh->clearKeyStream();
+
     // remove the check for >= since easter egg modes are between 20 and XX
     // if(newMode < 0 || newMode >= ModeSelectMode::M_MODE_COUNT)
     if(newMode < 0)

@@ -35,6 +35,8 @@ ModePlayTrack::ModePlayTrack(EventHandler *const e, U8G2_SSD1306_128X32_UNIVISIO
     // Astronauts Requiem by u4ia
     const char* modFile = "/astro2.mod";
 
+    hs->println("Increasing CPU frequency");
+
     system_update_cpu_freq(SYS_CPU_160MHZ);
 
     file = new AudioFileSourceSPIFFS(modFile);
@@ -56,6 +58,9 @@ bool ModePlayTrack::getEnforceFramerate()
 void ModePlayTrack::cleanup()
 {
     system_update_cpu_freq(SYS_CPU_80MHZ);
+    delete(mod);
+    delete(file);
+    delete(out);
 }
 
 void ModePlayTrack::handleEvents()

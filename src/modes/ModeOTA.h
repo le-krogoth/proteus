@@ -42,22 +42,22 @@ protected:
 
 private:
     void update();
+    void printScreen(std::string message);
 
-    static const uint8_t LEFT_BUTTON_SELECTED = 1;
-    static const uint8_t RIGHT_BUTTON_SELECTED = 2;
-
-    // open wifi, check if there is a spiffs, ask user if she wants to install
-    static const uint8_t STATE_ASK_SPIFFS = 0;
-    static const uint8_t STATE_UPDATE_SPIFFS = 1;
-    // do the same with the fw
-    static const uint8_t STATE_ASK_FW = 2;
-    static const uint8_t STATE_UPDATE_FW = 3;
+    // ask user if she wants to check for and install updates OTA
+    static const uint8_t STATE_ASK = 0;
+    static const uint8_t STATE_CHICKEN = 1;
+    static const uint8_t STATE_UPDATE = 2;
+    static const uint8_t STATE_NO_UPDATE_AVAIL = 3;
 
     // TODO define what happens afterwards. reboot? asking for reboot?
 
     Config* conf = NULL;
-    uint8_t state = 0; // which state are we in (display, update, etc)
-    uint8_t selection = 0; // which button is selected?
+    uint8_t state = STATE_ASK; // which state are we in (display, update, etc)
+
+    bool bUpdatedSPIFFS = false;
+    bool bUpdatedFW = false;
+    bool isInitialised = false;
 };
 
 #endif // mode_ota_h

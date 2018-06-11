@@ -37,7 +37,12 @@ void setup()
 
     Serial.println("Proteus booting up");
 
-    //randomSeed(analogRead(0));
+    // TODO:
+    // randomize seed
+    // randomSeed(analogRead(0));
+
+    // Erase config for some AP settings are stored otherwise
+    // TODO: Could only be done if requested by user
     ESP.eraseConfig();
 
     Serial.println("Setting standard Wifi Configuration");
@@ -90,8 +95,6 @@ void setup()
     }
 
     Serial.println("Let's go. Welcome to Proteus.");
-
-    delay(10);
 }
 
 // ------------------------------------------------------------------
@@ -113,10 +116,13 @@ void loop()
         lastFreeHeap = freeHeap;
     }
 
+    // poll fills the bitmask with the current button state. no poll, no updates.
     eh->poll();
 
+    // have the module check its events
     mm->checkEvents();
 
+    // have the module paint its UI
     dm->handleFrame();
 }
 

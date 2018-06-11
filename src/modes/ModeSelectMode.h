@@ -46,16 +46,15 @@ public:
     static const uint8_t M_MODE_DEFAULT = 0;
 
     static const uint8_t M_SELECT_MODE  = 0;
-    static const uint8_t M_SETUP_MODE   = 1;
-
-    static const uint8_t M_KNIGHT_RIDER = 2;
-    static const uint8_t M_NICKNAME     = 3;
-    static const uint8_t M_LOGO         = 4;
+    static const uint8_t M_LOGO         = 1;
+    static const uint8_t M_SNAKE        = 2;
+    static const uint8_t M_KNIGHT_RIDER = 3;
+    static const uint8_t M_NICKNAME     = 4;
     static const uint8_t M_TIMETABLE    = 5;
     static const uint8_t M_UNICORN_GAME = 6;
     static const uint8_t M_AFTER_DARK   = 7;
     static const uint8_t M_WIFISCANNER  = 8;
-    static const uint8_t M_SNAKE        = 9;
+    static const uint8_t M_SETUP_MODE   = 9;
     // WARNING, if you add a Module, add +1 on the M_MODE_COUNT
 
     static const uint8_t M_EASTEREGG_1  = 20;
@@ -72,15 +71,15 @@ private:
 
     const char* DISPLAY_MODES[M_MODE_COUNT] = {
             "Select Mode",
-            "Configure your badge",
+            "Show Logo",
+            "Snake (on a badge)",
             "Cyclope",
             "Show Nickname",
-            "Show Logo",
             "Timetable",
             "Unicorn",
             "After Dark",
             "Wifi Scanner",
-            "Snake (on a badge)"
+            "Configure your badge"
     };
 };
 

@@ -45,7 +45,11 @@ protected:
 
 private:
     AudioOutputI2SNoDAC *out = NULL;
+    ESP8266SAM* sam = NULL;
 
+    uint8_t linesSpoken = 0;
+
+    std::string story[10];
 };
 
 #endif // mode_playtrack_h

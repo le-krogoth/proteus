@@ -43,14 +43,21 @@ private:
     float_t d = 0.0;
     uint16_t position = 0; // position where in the string we are (left position of screen)
     std::string scrolltext = "              "
+                             "AREA41 SECURITY CONFERENCE 2018 - PRESENTED BY - DEFCON SWITZERLAND - ZURICH SWITZERLAND "
+                             "              "
+                             " * LEGENDS NEVER DIE * "
+                             "              "
                              "nice, you found the secret screen. the one where silly text scrolls by. "
-                             "this badge was made with <3 by @mylaocoon and @krogoth. "
-                             "have you found all the easter eggs yet? this is only one, there are many more to be found. "
+                             "              "
+                             "this badge was made with <3 by @mylaocoon and @krogoth@mastodon.social. "
+                             "have you found all the easter eggs yet? "
+                             "              "
                              "did we mention that there is a hidden feature to flash this badge OTA? "
-                             "you should btw have a look at the source code for this badge. and then add your own game or app. "
-                             "tell us about your game or app and we will add it to the main source for others to enjoy as well. "
-                             "did you know that no unicorns were harmed by coding the unicorn game? "
-                             "thanks for watching to the end...";
+                             "did you know that no unicorns were harmed by writing this scrolling text? "
+                             "              "
+                             "and now a quick public service announcement: "
+                             "    * mess with the best, die like the rest *   "
+                             "thanks for watching to the end... ";
 
 };
 

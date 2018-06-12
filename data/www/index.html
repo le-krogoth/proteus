@@ -86,7 +86,15 @@
             type: 'GET',
             timeout: 2500,
             error: function(xhr, errorType) { console.error(errorType) },
-            success: function(data, status, xhr) { console.error(status) }
+            success: function(data, status, xhr) {
+
+                console.error(status);
+
+                $('#txtNickname').val(data.nickname);
+                $('#txtSoftAPSSID').val(data.softAPSSID);
+                $('#txtSoftAPPSK').val(data.softAPPSK);
+
+            }
         })
     }
 
@@ -124,11 +132,16 @@
 
         $('#bChanges').addClass('siimple-btn--disabled');
 
-        var data = "";
+        var data = "{\n" +
+            "  \"nickname\": \"" + $('#txtNickname').val() + "\",\n" +
+            "  \"softAPSSID\": \"" + $('#txtSoftAPSSID').val() + "\",\n" +
+            "  \"softAPPSK\": \"" + $('#txtSoftAPPSK').val() + "\"\n" +
+            "}";
 
         $.ajax({
             url: '/api/config',
             data: data,
+            contentType: 'application/json',
             type: 'POST',
             timeout: 2500,
             error: function(xhr, errorType) { console.error(errorType) },
@@ -185,27 +198,21 @@
                         <p class="siimple-p">This section lets you configure the settings for the AP Mode (where you can access your AP and change settings).</p>
                         <div class="siimple-form-field">
                             <label class="siimple-label">Nickname to show on the display: </label>
-                            <input type="text" class="siimple-input" placeholder="My Leet Nickname">
+                            <input type="text" class="siimple-input" placeholder="My Leet Nickname" id="txtNickname">
                             <div class="siimple-form-field-helper">If this field is empty, your badge will show something else on the display.</div>
                         </div>
                         <br>
                         <p class="siimple-p">This section lets you configure the settings for the AP Mode (where you can access your AP and change settings).</p>
                         <div class="siimple-form-field">
                             <label class="siimple-label">SSID of the AP: </label>
-                            <input type="text" class="siimple-input" placeholder="MyLeetAP">
-                            <div class="siimple-form-field-helper">If this field is empty, your badge will generate the SSID itself.</div>
+                            <input type="text" class="siimple-input" placeholder="MyLeetAP" id="txtSoftAPSSID">
+                            <div class="siimple-form-field-helper">If this field is auto, your badge will generate the SSID itself.</div>
                         </div>
                         <div class="siimple-form-field">
                             <label class="siimple-label">Password for your AP: </label>
-                            <input type="password" class="siimple-input" placeholder="MyStrongPassword">
-                            <div class="siimple-form-field-helper">If this field is empty, your badge will generate a password itself.</div>
+                            <input type="text" class="siimple-input" placeholder="MyStrongPassword" id="txtSoftAPPSK">
+                            <div class="siimple-form-field-helper">If this field is auto, your badge will generate a password itself.</div>
                         </div>
-                        <label class="siimple-label">Boot into this Mode: </label>
-                        <select class="siimple-select">
-                            <option selected>AP Mode</option>
-                            <option>Conference Mode</option>
-                            <option>Game Mode</option>
-                        </select>
                         <br>
                         <br>
                         <div class="siimple-btn siimple-btn--red" onclick="submitChanges()" id="bChanges">Save changes</div>

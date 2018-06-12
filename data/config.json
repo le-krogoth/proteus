@@ -2,9 +2,9 @@
   "nickname": "31337 h4x0r",
   "softAPSSID": "auto",
   "softAPPSK": "auto",
-  "currentMode": 5,
-  "updateSSID": "proteus",
-  "updatePSK": "proteus.1234",
-  "updateServer": "http://192.168.4.18/",
+  "currentMode": 1,
+  "updateSSID": "Proteus_OTA",
+  "updatePSK": "932/&jhGF*)1",
+  "updateServer": "http://192.168.41.41:8081/",
   "showBootLogo": true
 }

@@ -35,24 +35,21 @@ ModeSetup::ModeSetup(EventHandler *const e, Config* const c, U8G2_SSD1306_128X32
 
     } while ( u8g2->nextPage() );
 
-
     WiFi.disconnect(true);
     WiFi.softAPdisconnect(true);
+
     bool bStarted = WiFi.softAP(conf->getSoftAPSSID().c_str(), conf->getSoftAPPSK().c_str());
+    //bool bStarted = WiFi.softAP(conf->getSoftAPSSID().c_str(), "");
     WiFi.setSleepMode(WIFI_NONE_SLEEP);
+
+    delay(500);
 
     hs->print("SoftAP started: ");
     hs->println(bStarted);
 
-    //WWWSERVER.on("/api/config", HTTP_GET, getConfig);
-    //WWWSERVER.on("/api/config", HTTP_POST, setConfig);
-    //WSConfigHandler* confHandler = new WSConfigHandler(hws);
-    //WWWSERVER.addHandler(confHandler);
     server->on("/api/config", HTTP_GET, std::bind(&ModeSetup::handleGetConfig, this));
     server->on("/api/config", HTTP_POST, std::bind(&ModeSetup::handleSetConfig, this));
 
-    //WSHWInfoHandler* hwHandler = new WSHWInfoHandler(hws);
-    //WWWSERVER.addHandler(hwHandler);
     server->on("/api/hwinfo", HTTP_GET, std::bind(&ModeSetup::handleGetHWInfo, this));
 
     // files
@@ -86,6 +83,7 @@ void ModeSetup::cleanup()
     hs->println("disconnecting Wifi Soft AP and shutting down Server");
     WiFi.softAPdisconnect(true);
     server->stop();
+    delete(server);
 }
 
 void ModeSetup::handleEvents()

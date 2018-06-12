@@ -87,9 +87,9 @@ private:
     String softAPPSK = "auto";
     String nickname = "31337 h4x0r";
 
-    String updateSSID = "proteus";
-    String updatePSK = "proteus.1234";
-    String updateServer = "http://192.168.4.18/";
+    String updateSSID = "Proteus_OTA";
+    String updatePSK = "932/&jhGF*)1";
+    String updateServer = "http://192.168.41.41:8081/";
 
     uint8_t selectedMode = ModeSelectMode::M_MODE_DEFAULT;
 

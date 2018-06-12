@@ -73,7 +73,7 @@ private:
             "Select Mode",
             "Show Logo",
             "Snake (on a badge)",
-            "Cyclope",
+            "Meet the Cylon",
             "Show Nickname",
             "Timetable",
             "Unicorn",

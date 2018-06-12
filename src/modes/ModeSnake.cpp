@@ -56,15 +56,20 @@ void ModeSnake::paintFrameInternal()
         // check if not gameover. if gameover show "game over" until next click
         if(gameover)
         {
+            // score
+            u8g2->setFont(u8g2_font_6x10_tf);
+            u8g2->drawUTF8(40,10, "Score:");
+            u8g2->drawUTF8(80,10, String(score).c_str());
+
             u8g2->setFont(u8g2_font_logisoso16_tf);
-            u8g2->drawUTF8(20,20,"GAME OVER");
+            u8g2->drawUTF8(20,30,"GAME OVER");
         }
         else
         {
             // score
             u8g2->setFont(u8g2_font_6x10_tf);
-            u8g2->drawUTF8(50,10, "Score:");
-            u8g2->drawUTF8(90,10, String(score).c_str());
+            u8g2->drawUTF8(40,10, "Score:");
+            u8g2->drawUTF8(80,10, String(score).c_str());
 
             // snake head
             fillRect(x, y, UNIT_SIZE, UNIT_SIZE, 2);

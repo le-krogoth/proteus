@@ -38,6 +38,9 @@
 #include "modes/ModeOTA.h"
 #include "modes/ModeSnake.h"
 #include "modes/ModeAbout.h"
+#include "modes/ModeEyes.h"
+#include "modes/ModeRobotEyes.h"
+#include "modes/ModeLoading.h"
 
 class ModeManager
 {

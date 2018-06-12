@@ -22,7 +22,6 @@
 #define mode_selectmode_h
 
 #include <U8g2lib.h>
-#include <pod/SimpleList.h>
 #include "../EventHandler.h"
 #include "BaseMode.h"
 
@@ -41,7 +40,7 @@ public:
     void loadApp(uint8_t id, const char* name);
 
     // this is a bit of fake, this is the amount of standard modes, not including easter eggs...
-    static const uint8_t M_MODE_COUNT   = 10;
+    static const uint8_t M_MODE_COUNT   = 13;
 
     static const uint8_t M_MODE_DEFAULT = 0;
 
@@ -51,10 +50,13 @@ public:
     static const uint8_t M_KNIGHT_RIDER = 3;
     static const uint8_t M_NICKNAME     = 4;
     static const uint8_t M_TIMETABLE    = 5;
-    static const uint8_t M_UNICORN_GAME = 6;
-    static const uint8_t M_AFTER_DARK   = 7;
-    static const uint8_t M_WIFISCANNER  = 8;
-    static const uint8_t M_SETUP_MODE   = 9;
+    static const uint8_t M_EYES		    = 6;
+    static const uint8_t M_ROBOTEYES    = 7;
+    static const uint8_t M_LOADING      = 8;
+    static const uint8_t M_UNICORN_GAME = 9;
+    static const uint8_t M_AFTER_DARK   = 10;
+    static const uint8_t M_WIFISCANNER  = 11;
+    static const uint8_t M_SETUP_MODE   = 12;
     // WARNING, if you add a Module, add +1 on the M_MODE_COUNT
 
     static const uint8_t M_EASTEREGG_1  = 20;
@@ -76,6 +78,9 @@ private:
             "Meet the Cylon",
             "Show Nickname",
             "Timetable",
+            "Angry Eyes",
+            "Robot Eyes",
+            "Loading...",
             "Unicorn",
             "After Dark",
             "Wifi Scanner",

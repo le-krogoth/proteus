@@ -30,6 +30,7 @@ ModeManager::ModeManager(EventHandler* const e, Config* const c, U8G2_SSD1306_12
     // check if user presses both buttons during boot
     // if so, start in ModeSelectMode::M_MODE_DEFAULT
     // if not, init the mode to the last one from the config
+    // TODO: think about resetting the config as well
     if(eh->isLeftAndRightPressed())
     {
         hs->println("reset into mode default");
@@ -37,6 +38,7 @@ ModeManager::ModeManager(EventHandler* const e, Config* const c, U8G2_SSD1306_12
     }
     else if(eh->isPrgPressed())
     {
+        hs->println("you found the hidden secret. or so.");
         setMode(ModeSelectMode::M_ABOUT, ModeSelectMode::M_MODE_DEFAULT, false);
     }
     else
@@ -214,6 +216,15 @@ void ModeManager::setMode(uint8_t newMode, uint8_t oldMode, bool storeMode)
             break;
         case ModeSelectMode::M_TIMETABLE:
             currentModeObject = new ModeTimeTable(eh, u8g2, hs);
+            break;
+        case ModeSelectMode::M_EYES:
+            currentModeObject = new ModeEyes(eh, u8g2, hs);
+            break;
+        case ModeSelectMode::M_ROBOTEYES:
+            currentModeObject = new ModeRobotEyes(eh, u8g2, hs);
+            break;
+        case ModeSelectMode::M_LOADING:
+            currentModeObject = new ModeLoading(eh, u8g2, hs);
             break;
         case ModeSelectMode::M_UNICORN_GAME:
             currentModeObject = new ModeUnicorn(eh, u8g2, hs);

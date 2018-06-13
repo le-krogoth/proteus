@@ -45,6 +45,7 @@ void ModeEyes::paintFrameInternal()
 
     } while ( u8g2->nextPage() );
 
+    isDirty = false;
 }
 
 

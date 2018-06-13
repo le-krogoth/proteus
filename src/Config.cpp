@@ -28,12 +28,12 @@ Config::Config(HardwareSerial* const hws, bool readOnly)
 
 bool Config::configExist()
 {
-    return SPIFFS.exists(configFile);
+    return SPIFFS.exists(configFile.c_str());
 }
 
 bool Config::loadConfig()
 {
-    File f = SPIFFS.open(configFile, "r");
+    File f = SPIFFS.open(configFile.c_str(), "r");
     if (!f)
     {
         hs->println("file open failed in config");
@@ -62,12 +62,12 @@ bool Config::loadConfig()
         {
             hs->println(F("Config file parsed, reading it now"));
 
-            softAPSSID = root["softAPSSID"].as<String>();
+            softAPSSID = root["softAPSSID"].as<char*>();
             if(softAPSSID == "auto")
             {
                 softAPSSID = ("area41_" + getMAC()).c_str();;
             }
-            softAPPSK = root["softAPPSK"].as<String>();
+            softAPPSK = root["softAPPSK"].as<char*>();
             if(softAPPSK == "auto")
             {
                 hs->println("generating password");
@@ -75,12 +75,12 @@ bool Config::loadConfig()
                 softAPPSK = generatePassword();
             }
 
-            nickname = root["nickname"].as<String>();
+            nickname = root["nickname"].as<char*>();
             selectedMode = root["currentMode"];
             bShowBootLogo = root["showBootLogo"];
-            updateSSID = root["updateSSID"].as<String>();
-            updatePSK = root["updatePSK"].as<String>();
-            updateServer = root["updateServer"].as<String>();
+            updateSSID = root["updateSSID"].as<char*>();
+            updatePSK = root["updatePSK"].as<char*>();
+            updateServer = root["updateServer"].as<char*>();
 
             /*
             hs->print(F("Show boot logo: "));
@@ -94,7 +94,7 @@ bool Config::loadConfig()
     return true;
 }
 
-String Config::generatePassword()
+std::string Config::generatePassword()
 {
     std::string keyspace = "0aAbB1cCdD1eEf2F2gG3hHiIjJk3K45lLmM9n5N6o4OpPqQ76rRsStT78uUvVwW98xXyY0zZ";
     std::string pwd = "";
@@ -106,25 +106,29 @@ String Config::generatePassword()
 
     hs->print("New password: ");
     hs->println(pwd.c_str());
-    return String(pwd.c_str());
+    return pwd.c_str();
 }
 
-String Config::getConfigAsJSON()
+std::string Config::getConfigAsJSON()
 {
-    String json = "";
+    std::string json = "";
 
     // TODO, clean it up
-    json += "{";
-    json += "\"nickname\": \"" + nickname + "\",";
-    json += "\"softAPSSID\": \"" + softAPSSID+ "\",";
-    json += "\"softAPPSK\": \"" + softAPPSK + "\",";
-    json += "\"currentMode\": " + String(selectedMode) + ",";
-    json += "\"updateSSID\": \"" + updateSSID+ "\",";
-    json += "\"updatePSK\": \"" + updatePSK + "\",";
-    json += "\"updateServer\": \"" + updateServer + "\",";
-    json += "\"showBootLogo\": \"" + (bShowBootLogo ? String("true") : String("false")) + "\"";
+    json.append("{");
+    json.append("\"nickname\": \"" + nickname + "\",");
+    json.append("\"softAPSSID\": \"" + softAPSSID+ "\",");
+    json.append("\"softAPPSK\": \"" + softAPPSK + "\",");
+    json.append("\"currentMode\": ");
+    json.append(String(selectedMode).c_str());
+    json.append(",");
+    json.append("\"updateSSID\": \"" + updateSSID+ "\",");
+    json.append("\"updatePSK\": \"" + updatePSK + "\",");
+    json.append("\"updateServer\": \"" + updateServer + "\",");
+    json.append("\"showBootLogo\": \"");
+    json.append(bShowBootLogo ? "true" : "false");
+    json.append("\"");
     //json += "\"showBootLogo\": true";
-    json += "}";
+    json.append("}");
 
     return json;
 }
@@ -138,7 +142,7 @@ bool Config::storeConfig()
         return false;
     }
 
-    File f = SPIFFS.open(configFile, "w");
+    File f = SPIFFS.open(configFile.c_str(), "w");
 
     if (!f)
     {
@@ -147,12 +151,12 @@ bool Config::storeConfig()
     }
     else
     {
-        String configuration = getConfigAsJSON();
+        std::string configuration = getConfigAsJSON();
 
         // hs->println("Writing config file: ");
         // hs->println(configuration);
 
-        f.print(configuration);
+        f.print(configuration.c_str());
         f.close();  //Close file
         f.flush();
 
@@ -165,57 +169,57 @@ bool Config::getShowBootLogo()
     return bShowBootLogo;
 }
 
-String Config::getNickname()
+std::string Config::getNickname()
 {
     return nickname;
 }
 
-void Config::setNickname(String n)
+void Config::setNickname(std::string n)
 {
     nickname = n;
 }
 
-String Config::getSoftAPSSID()
+std::string Config::getSoftAPSSID()
 {
     return softAPSSID;
 }
 
-void Config::setSoftAPSSID(String ssid)
+void Config::setSoftAPSSID(std::string ssid)
 {
     softAPSSID = ssid;
 }
 
-String Config::getSoftAPPSK()
+std::string Config::getSoftAPPSK()
 {
     return softAPPSK;
 }
 
-void Config::setSoftAPPSK(String psk)
+void Config::setSoftAPPSK(std::string psk)
 {
     softAPPSK = psk;
 }
 
-String Config::getUpdateSSID()
+std::string Config::getUpdateSSID()
 {
     return updateSSID;
 }
 
-void Config::setUpdateSSID(String ssid)
+void Config::setUpdateSSID(std::string ssid)
 {
     updateSSID = ssid;
 }
 
-String Config::getUpdatePSK()
+std::string Config::getUpdatePSK()
 {
     return updatePSK;
 }
 
-void Config::setUpdatePSK(String psk)
+void Config::setUpdatePSK(std::string psk)
 {
     updatePSK = psk;
 }
 
-String Config::getUpdateServer()
+std::string Config::getUpdateServer()
 {
     return updateServer;
 }
@@ -235,7 +239,7 @@ void Config::writeDefaultConfig()
     storeConfig();
 }
 
-String Config::getMAC()
+std::string Config::getMAC()
 {
     uint8_t mac[6];
 
@@ -249,6 +253,6 @@ String Config::getMAC()
     //hs->print("MAC: ");
     //hs->println(result);
 
-    return String( result );
+    return result;
 }
 

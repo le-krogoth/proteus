@@ -137,10 +137,10 @@ void ModeSetup::handleNotFound()
 
 void ModeSetup::handleGetConfig()
 {
-    String json = conf->getConfigAsJSON();
+    std::string json = conf->getConfigAsJSON();
 
     server->sendHeader("Cache-Control", "no-cache");
-    server->send(200, "application/json; charset=utf-8", json);
+    server->send(200, "application/json; charset=utf-8", json.c_str());
 }
 
 void ModeSetup::handleSetConfig()
@@ -160,21 +160,21 @@ void ModeSetup::handleSetConfig()
         return;
     }
 
-    String nickname = root["nickname"].as<String>();
-    String softAPSSID = root["softAPSSID"].as<String>();
-    String softAPPSK = root["softAPPSK"].as<String>();
+    std::string nickname = root["nickname"].as<char*>();
+    std::string softAPSSID = root["softAPSSID"].as<char*>();
+    std::string softAPPSK = root["softAPPSK"].as<char*>();
 
-    if(nickname)
+    if(nickname.length() > 0)
     {
         conf->setNickname(nickname);
     }
 
-    if(softAPSSID)
+    if(softAPSSID.length() > 0)
     {
         conf->setSoftAPSSID(softAPSSID);
     }
 
-    if(softAPPSK && softAPPSK.length() >= 8)
+    if(softAPPSK.length() >= 8)
     {
         conf->setSoftAPPSK(softAPPSK);
     }

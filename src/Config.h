@@ -43,29 +43,29 @@ public:
     // TODO: clear question -> only write config down when this function is called. no auto store?
     bool storeConfig();
 
-    String getConfigAsJSON();
+    std::string getConfigAsJSON();
 
     bool getShowBootLogo();
 
-    String getNickname();
-    void setNickname(String n);
+    std::string getNickname();
+    void setNickname(std::string n);
 
-    String getSoftAPSSID();
-    void setSoftAPSSID(String ssid);
-    String getSoftAPPSK();
-    void setSoftAPPSK(String psk);
+    std::string getSoftAPSSID();
+    void setSoftAPSSID(std::string ssid);
+    std::string getSoftAPPSK();
+    void setSoftAPPSK(std::string psk);
 
-    String getUpdateSSID();
-    void setUpdateSSID(String ssid);
-    String getUpdatePSK();
-    void setUpdatePSK(String psk);
+    std::string getUpdateSSID();
+    void setUpdateSSID(std::string ssid);
+    std::string getUpdatePSK();
+    void setUpdatePSK(std::string psk);
 
-    String getUpdateServer();
+    std::string getUpdateServer();
 
     uint8_t getCurrentMode();
     void setCurrentMode(uint8_t mode);
 
-    const String configFile = "/config.json";
+    const std::string configFile = "/config.json";
 
 protected:
 
@@ -75,7 +75,7 @@ protected:
 private:
 
     // writes default config, chooses sensible values for SoftAP SSID, PSK and such.
-    String getMAC();
+    std::string getMAC();
 
     void writeDefaultConfig();
 
@@ -83,18 +83,17 @@ private:
     bool bReadOnly = true;
     bool bShowBootLogo = true;
 
-    // TODO switch from String to std::string
-    String softAPSSID = "auto";
-    String softAPPSK = "auto";
-    String nickname = "31337 h4x0r";
+    std::string softAPSSID = "auto";
+    std::string softAPPSK = "auto";
+    std::string nickname = "31337 h4x0r";
 
-    String updateSSID = "Proteus_OTA";
-    String updatePSK = "932/&jhGF*)1";
-    String updateServer = "http://192.168.41.41:8081/";
+    std::string updateSSID = "Proteus_OTA";
+    std::string updatePSK = "932/&jhGF*)1";
+    std::string updateServer = "http://192.168.41.41:8081/";
 
     uint8_t selectedMode = ModeSelectMode::M_MODE_DEFAULT;
 
-    String generatePassword();
+    std::string generatePassword();
 };
 
 #endif

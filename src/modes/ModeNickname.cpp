@@ -34,6 +34,12 @@ void ModeNickname::handleEvents()
 
 void ModeNickname::paintFrameInternal()
 {
+    if(!isDirty)
+    {
+        // optimise screen refresh.
+        return;
+    }
+
     // only do this if not initialised yet
     if(nickname.length() == 0)
     {
@@ -41,11 +47,16 @@ void ModeNickname::paintFrameInternal()
 
         hs->println("after getting nick");
 
-        if (nickname.length() <= 4) {
+        if (nickname.length() <= 4)
+        {
             u8g2->setFont(u8g2_font_logisoso32_tf);
-        } else if (nickname.length() <= 8) {
+        }
+        else if (nickname.length() <= 8)
+        {
             u8g2->setFont(u8g2_font_logisoso24_tf);
-        } else {
+        }
+        else
+        {
             u8g2->setFont(u8g2_font_logisoso16_tf);
         }
     }
@@ -56,6 +67,8 @@ void ModeNickname::paintFrameInternal()
         u8g2->drawUTF8(0,31, nickname.c_str());
 
     } while ( u8g2->nextPage() );
+
+    isDirty = false;
 }
 
 

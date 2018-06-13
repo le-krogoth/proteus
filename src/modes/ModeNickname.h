@@ -40,8 +40,9 @@ protected:
 private:
 
     Config* conf = NULL;
+    bool isDirty = true;
 
-    String nickname = "";
+    std::string nickname = "";
 };
 
 #endif // mode_nickname_h

@@ -76,7 +76,7 @@ void ModeManager::checkEvents()
             eh->clearKeyStream();
 
             uint8_t oldMode = currentMode;
-            currentMode = ModeSelectMode::M_EASTEREGG_1;
+            currentMode = ModeSelectMode::M_HELIX;
             setMode(currentMode, oldMode);
             return;
         } else if (sKeyStream == "RLRLRRLL") {
@@ -84,7 +84,7 @@ void ModeManager::checkEvents()
             eh->clearKeyStream();
 
             uint8_t oldMode = currentMode;
-            currentMode = ModeSelectMode::M_EASTEREGG_1;
+            currentMode = ModeSelectMode::M_HELIX;
             setMode(currentMode, oldMode);
             return;
         } else if (sKeyStream == "RLRRLRLL") {
@@ -238,8 +238,8 @@ void ModeManager::setMode(uint8_t newMode, uint8_t oldMode, bool storeMode)
         case ModeSelectMode::M_SNAKE:
             currentModeObject = new ModeSnake(eh, u8g2, hs);
             break;
-        case ModeSelectMode::M_EASTEREGG_1:
-            currentModeObject = new ModeUnicorn(eh, u8g2, hs);
+        case ModeSelectMode::M_HELIX:
+            currentModeObject = new BaseMode(eh, u8g2, hs);
             break;
         case ModeSelectMode::M_PLAY_TRACK:
             currentModeObject = new ModePlayTrack(eh, u8g2, hs);

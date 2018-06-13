@@ -59,7 +59,7 @@ public:
     static const uint8_t M_SETUP_MODE   = 12;
     // WARNING, if you add a Module, add +1 on the M_MODE_COUNT
 
-    static const uint8_t M_EASTEREGG_1  = 20;
+    static const uint8_t M_HELIX        = 20;
     static const uint8_t M_PLAY_TRACK   = 21;
     static const uint8_t M_TELL_TALE    = 22;
     static const uint8_t M_OTA          = 23;

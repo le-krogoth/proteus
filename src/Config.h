@@ -83,6 +83,7 @@ private:
     bool bReadOnly = true;
     bool bShowBootLogo = true;
 
+    // TODO switch from String to std::string
     String softAPSSID = "auto";
     String softAPPSK = "auto";
     String nickname = "31337 h4x0r";

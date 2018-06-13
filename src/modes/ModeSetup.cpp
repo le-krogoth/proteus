@@ -174,7 +174,7 @@ void ModeSetup::handleSetConfig()
         conf->setSoftAPSSID(softAPSSID);
     }
 
-    if(softAPPSK)
+    if(softAPPSK && softAPPSK.length() >= 8)
     {
         conf->setSoftAPPSK(softAPPSK);
     }

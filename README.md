@@ -74,6 +74,28 @@ rm .piolibdeps/ESP8266Audio_ID1964/src/AudioFileSourceSD.h
 
 After that, Proteus should compile again
 
+### PIN_IN
+
+If you get an error like this, then read on:
+
+> undefined reference to `PIN_IN'
+
+Search for a file called "*eagle.app.v6.*.ld". 
+
+It usually is at:
+
+```
+/home/user/.platformio/packages/framework-arduinoespressif8266/tools/sdk/ld/eagle.app.v6.common.ld
+```
+
+Then add this line to that file, just besides another PROVIDE you find at the beginning:
+
+```
+PROVIDE(PIN_IN = 0x60000318);
+```
+
+Accessing PIN_IN in your source will give you access to the register with all the pins current states.
+
 # Architecture
 proteus.cpp is the main file. This is where everything is set up and where the main 
 loop can be found.

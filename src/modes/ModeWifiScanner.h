@@ -45,7 +45,7 @@ protected:
 private:
     uint8_t selectedAP = 0;
     uint8_t viewPos = 0;
-    SimpleList<AP>* sAP;
+    std::vector<AP> vAP;
 
     bool loadAPs();
     void initCurrentAP();

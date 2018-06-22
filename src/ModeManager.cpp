@@ -130,7 +130,8 @@ void ModeManager::checkEvents()
             currentMode = m->getSelectedMode();
             setMode(currentMode, 0);
         }
-        else if(currentMode == ModeSelectMode::M_TIMETABLE || currentMode == ModeSelectMode::M_WIFISCANNER)
+        //else if(currentMode == ModeSelectMode::M_TIMETABLE || currentMode == ModeSelectMode::M_WIFISCANNER)
+        else if(currentMode == ModeSelectMode::M_TIMETABLE)
         {
             // there is a memory leak somewhere in the linked list
             // time ran out and the leak was still there

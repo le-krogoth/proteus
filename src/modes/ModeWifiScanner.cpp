@@ -22,8 +22,6 @@
 
 ModeWifiScanner::ModeWifiScanner(EventHandler *const e, U8G2_SSD1306_128X32_UNIVISION_F_SW_I2C* const u8, HardwareSerial *const hws) : BaseMode (e, u8, hws)
 {
-    sAP = new SimpleList<AP>;
-
     u8g2->setFont(u8g2_font_6x10_tf);
     u8g2->firstPage();
     do {
@@ -44,13 +42,8 @@ ModeWifiScanner::ModeWifiScanner(EventHandler *const e, U8G2_SSD1306_128X32_UNIV
 void ModeWifiScanner::cleanup()
 {
     hs->println("cleaning up, giving back memory");
-    sAP->clear();
-
-    // crash
-    delete(sAP);
-    // delete sAP;
+    vAP.clear();
 }
-
 
 bool ModeWifiScanner::loadAPs()
 {
@@ -58,14 +51,14 @@ bool ModeWifiScanner::loadAPs()
 
     for (int i = 0; i < n; ++i)
     {
-        AP* ap = new AP();
+        AP ap = AP();
 
-        ap->ssid = WiFi.SSID(i).c_str();
-        ap->rssi = WiFi.RSSI(i);
-        ap->encryptionType = WiFi.encryptionType(i);
-        ap->channel = WiFi.channel(i);
+        ap.ssid = WiFi.SSID(i).c_str();
+        ap.rssi = WiFi.RSSI(i);
+        ap.encryptionType = WiFi.encryptionType(i);
+        ap.channel = WiFi.channel(i);
 
-        sAP->add(*ap);
+        vAP.push_back(ap);
     }
 
     WiFi.disconnect();
@@ -99,15 +92,16 @@ void ModeWifiScanner::handleEvents()
 
     if(eh->isRightJustPressed())
     {
-        if(selectedAP < sAP->size() - 1)
+        if(selectedAP < vAP.size() - 1)
         {
             selectedAP++;
         }
 
-        if(selectedAP - viewPos > 1 && viewPos < (sAP->size() - 4))
+        if(selectedAP - viewPos > 1 && viewPos < (vAP.size() - 4))
         {
             viewPos++;
         }
+
     }
 }
 
@@ -120,7 +114,7 @@ void ModeWifiScanner::paintFrameInternal()
 
         for(int i = viewPos; i < viewPos + 4; i++)
         {
-            AP ap = sAP->get(i);
+            AP ap = vAP.at(i);
 
             u8g2->drawUTF8(6, ((i - viewPos) * 8) + 8, ap.ssid.substr(0, 15).c_str());
             u8g2->drawUTF8(110, ((i - viewPos) * 8) + 8, getEncStr(ap.encryptionType).c_str());
@@ -151,6 +145,5 @@ String ModeWifiScanner::getEncStr(uint8_t encryptionCode)
         default:
             return String("  ?");
     }
-
 }
-
+//EOF

@@ -130,19 +130,6 @@ void ModeManager::checkEvents()
             currentMode = m->getSelectedMode();
             setMode(currentMode, 0);
         }
-        //else if(currentMode == ModeSelectMode::M_TIMETABLE || currentMode == ModeSelectMode::M_WIFISCANNER)
-        else if(currentMode == ModeSelectMode::M_TIMETABLE)
-        {
-            // there is a memory leak somewhere in the linked list
-            // time ran out and the leak was still there
-            // so we added this hack to not have any show stoppers.
-            conf->setCurrentMode(ModeSelectMode::M_SELECT_MODE);
-            conf->storeConfig();
-
-            // reset the environment
-            ESP.reset();
-            delay(500);
-        }
         else
         {
             uint8_t oldMode = currentMode;

@@ -61,7 +61,7 @@ bool ModeWifiScanner::loadAPs()
         vAP.push_back(ap);
     }
 
-    WiFi.disconnect();
+    WiFi.disconnect(true);
 
     return true;
 }

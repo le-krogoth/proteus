@@ -26,7 +26,6 @@
 #include <U8g2lib.h>
 #include "../EventHandler.h"
 #include "BaseMode.h"
-#include "../pod/SimpleList.h"
 #include "../pod/AP.h"
 
 class ModeWifiScanner : public BaseMode

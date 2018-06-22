@@ -22,8 +22,6 @@
 
 ModeTimeTable::ModeTimeTable(EventHandler *const e, U8G2_SSD1306_128X32_UNIVISION_F_SW_I2C* const u8, HardwareSerial *const hws) : BaseMode (e, u8, hws)
 {
-    sTalks = new SimpleList<Talk>;
-
     hs->println("Loading talks");
 
     u8g2->setFont(u8g2_font_6x10_tf);
@@ -48,10 +46,7 @@ ModeTimeTable::ModeTimeTable(EventHandler *const e, U8G2_SSD1306_128X32_UNIVISIO
 void ModeTimeTable::cleanup()
 {
     hs->println("cleaning up, giving back memory");
-    sTalks->clear();
-
-    // crash
-    delete(sTalks);
+    vT.clear();
 }
 
 void ModeTimeTable::initCurrentTalk()
@@ -80,7 +75,7 @@ void ModeTimeTable::handleEvents()
     {
         if(currentTalk == 0)
         {
-            currentTalk = sTalks->size() - 1;
+            currentTalk = vT.size() - 1;
         }
         else
         {
@@ -93,7 +88,7 @@ void ModeTimeTable::handleEvents()
     if(eh->isRightJustPressed())
     {
         currentTalk++;
-        if(currentTalk >= sTalks->size())
+        if(currentTalk >= vT.size())
         {
             currentTalk = 0;
         }
@@ -111,7 +106,7 @@ void ModeTimeTable::paintFrameInternal()
     }
 
     hs->print("Talk no: ");
-    Talk talk = sTalks->get(currentTalk);
+    Talk talk = vT.at(currentTalk);
     hs->println(currentTalk);
 
     u8g2->setFont(u8g2_font_6x10_tf);
@@ -148,7 +143,7 @@ void ModeTimeTable::paintFrameInternal()
 
         u8g2->drawUTF8(48, 8, talk.date.c_str());
 
-        if(currentTalk < sTalks->size() -1)
+        if(currentTalk < vT.size() -1)
         {
             u8g2->drawUTF8(122, 8, ">");
         }
@@ -251,22 +246,22 @@ bool ModeTimeTable::loadTimeTable()
 
                 //hs->println(F("before Talk t = {}"));
 
-                Talk* t = new Talk();
+                Talk t = Talk();
 
                 //hs->println(talk["title"].as<String>());
 
-                t->title = talk["title"].as<char*>();
-                t->speaker = talk["speaker"].as<char*>();
-                t->room = talk["room"].as<char*>();
-                t->date = talk["date"].as<char*>();
-                t->start = talk["start"].as<char*>();
-                t->end = talk["end"].as<char*>();
+                t.title = talk["title"].as<char*>();
+                t.speaker = talk["speaker"].as<char*>();
+                t.room = talk["room"].as<char*>();
+                t.date = talk["date"].as<char*>();
+                t.start = talk["start"].as<char*>();
+                t.end = talk["end"].as<char*>();
 
                 //hs->println(F("after, before adding to list"));
                 //Serial.print(speaker);
                 //Serial.print(": ");
                 //Serial.println(String(title));
-                sTalks->add(*t);
+                vT.push_back(t);
 
                 //hs->println(F("added to list"));
             }

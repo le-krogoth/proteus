@@ -28,7 +28,6 @@
 #include "../EventHandler.h"
 #include "BaseMode.h"
 #include "../pod/Talk.h"
-#include "../pod/SimpleList.h"
 
 class ModeTimeTable : public BaseMode
 {
@@ -46,8 +45,7 @@ protected:
 
 private:
     uint8_t currentTalk = 0;
-    //LinkedList<Talk*> lTalks = LinkedList<Talk*>();
-    SimpleList<Talk>* sTalks;
+    std::vector<Talk> vT;
 
     int16_t titleOffset = 0;
     int16_t speakerOffset = 0;
